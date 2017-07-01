@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "dateformat": "^2.0.0",
+    "json": "^9.0.6",
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.2",
     "react-native-viewpager": "^0.2.13",

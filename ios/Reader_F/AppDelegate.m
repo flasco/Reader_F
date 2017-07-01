@@ -32,7 +32,7 @@
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
-   [NSThread sleepForTimeInterval:1.5];//启动画面延时
+   [NSThread sleepForTimeInterval:2];//启动画面延时
   [self.window makeKeyAndVisible];
   return YES;
 }

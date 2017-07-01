@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AppRegistry, StyleSheet, Text, View, ListView} from 'react-native';
+import {AppRegistry, StyleSheet, Text, View, ListView,ScrollView} from 'react-native';
 
 export default class NovelList extends Component {
     constructor(props) {
@@ -18,13 +18,14 @@ export default class NovelList extends Component {
     getNet() {
         let url = "http://testdb.leanapp.cn/Analy_x?action=1&url=http://www.23us.co" +
                 "m/html/65/65044/";
+        // url = 'http://testdb.leanapp.cn/Analy_x?action=2&url=http://www.23us.com/html/65/65044/26566546.html'
         fetch(url).then((Response) => Response.json()).then(responseData => {
-            console.log(responseData[0].title);
+            // console.log(responseData[0].title);
             this.setState({
                 dataSource: this
                     .state
                     .dataSource
-                    .cloneWithRows(responseData),
+                    .cloneWithRows(responseData.reverse()),
                 load: true
 
             })
@@ -36,27 +37,32 @@ export default class NovelList extends Component {
     _renderRow(rowData) {
         return (
             <View style={{height:38}}>
-                <View style={styles.solid}></View>
                     <Text style={styles.rowStyle}>{rowData.title}</Text>
             </View>
         );
     }
+    _renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
+    return (
+      <View style={styles.solid} />
+    );
+  }
 
     render() {
         if (this.state.load === true) {
             return (
                 <View>
-                    <Text style={styles.welcome}>美食供应商</Text>
                     <ListView
                         dataSource={this.state.dataSource}
+                        renderSeparator={this._renderSeparator}
                         renderRow={this
                         ._renderRow
                         .bind(this)}/>
+
                 </View>
                 );
         } else {
             return (
-                <Text>Loading now.please wait.</Text>
+                <Text style={styles.welcome}>Loading now.please wait.</Text>
             );
         }
 
@@ -80,14 +86,21 @@ const styles = StyleSheet.create({
         color: '#333333',
         marginBottom: 5
     },
+    LatestChapter:{
+        fontSize:12,
+        textAlign:'center',
+        marginTop:20,
+        marginBottom:10,
+        color:'#8a8a8a'
+    },
     rowStyle:{
         marginTop:12,
         marginLeft:15,
     },
     solid:{
-        height: 1, 
+        height: 0.2, 
         backgroundColor: 'black',
-        marginLeft:20,
+        marginLeft:15,
         marginRight:20,
         
     },

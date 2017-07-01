@@ -87,20 +87,23 @@ var ViewPager = React.createClass({
       } else if (relativeGestureDistance > 0.5 || (relativeGestureDistance > 0 && vx >= 1e-6)) {
         step = -1;
       }
-      
-      if(gestureState.x0>280&&gestureState.dx==0){
+      let clickX = gestureState.x0;
+      let moveX = gestureState.dx;
+      if(clickX>280 && moveX == 0){
         this.props.hasTouch && this.props.hasTouch(false);
         this.setState({toprev:0},()=>{
           this.movePage(1, gestureState,false);
           return ;
         });
-      }else if(gestureState.x0<90&&gestureState.dx==0){
+      }else if(clickX<90 && moveX == 0){
         this.props.hasTouch && this.props.hasTouch(false);
         this.setState({toprev:1},()=>{
           this.movePage(-1, gestureState,false);
           return ;
         });
-        
+      }else if( clickX>90 && clickX<280 && moveX ==0){
+         this.props.clickBoard();
+         return ;
       }
 
       this.props.hasTouch && this.props.hasTouch(false);

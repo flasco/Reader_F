@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AppRegistry, StyleSheet, Text, View, ListView,Button} from 'react-native';
+import {AppRegistry, StyleSheet, Text, View, ListView,Button,TouchableOpacity,StatusBar} from 'react-native';
 
 export default class BookList extends Component {
     static navigationOptions = {
@@ -22,64 +22,61 @@ export default class BookList extends Component {
     getNet() {
         let url = "http://testdb.leanapp.cn/Analy_x?action=1&url=http://www.23us.co" +
                 "m/html/65/65044/";
+        url = 'http://testdb.leanapp.cn/Analy_x?action=2&url=http://www.23us.com/html/65/65044/26566546.html';
         fetch(url).then((Response) => Response.json()).then(responseData => {
-            console.log(responseData[0].title);
-            this.setState({
-                dataSource: this
-                    .state
-                    .dataSource
-                    .cloneWithRows(responseData),
-                load: true
-
-            })
+            
 
         }).catch((Error) => {
             console.warn(Error);
         }).done();
     }
     _renderRow(rowData) {
+        const { navigate } = this.props.navigation;
+        var urlx = 'http://www.23us.com/html/65/65044/26566546.html';
         return (
+            <TouchableOpacity onPress={() => navigate('Read',{url:urlx,name:rowData})} >
             <View style={{height:38}}>
                 <Text style={styles.rowStyle}>{rowData}</Text>
-                <View style={styles.solid}></View>
             </View>
+            </TouchableOpacity>
         );
     }
+    _renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
+    return (
+      <View style={styles.solid} />
+    );
+  }
 
     render() {
-        const { navigate } = this.props.navigation;
+        
         return (
             <View style= {styles.container}> 
-            <Button
-                onPress={() => navigate('ChaL')}
-                title="Chat with Lucy"
-            />
+            <StatusBar
+                barStyle="light-content"
+            ></StatusBar>
                 <ListView 
                     style = {{flex:1}}
                     dataSource={this.state.dataSource}
+                    renderSeparator={this._renderSeparator}
                     renderRow={this
                     ._renderRow
                     .bind(this)}/>
             </View>
             );
-
-
     }
 }
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 50,
+        paddingTop: 5,
         backgroundColor: '#F5FCFF'
     },
     rowStyle:{
-        marginBottom:12,
+        marginTop:12,
         marginLeft:20,
     },
     solid:{
         height: 1, 
         backgroundColor: '#8a8a8a',
-
-        
     },
 });
