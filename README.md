@@ -1,5 +1,5 @@
 # Reader_F
-This is a novel read app powered by react-native.
+This is a novel reader app powered by react-native.
 it use:
   
 1.react-navigation
