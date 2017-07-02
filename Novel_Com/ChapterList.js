@@ -27,7 +27,6 @@ export default class NovelList extends Component {
                     .dataSource
                     .cloneWithRows(responseData.reverse()),
                 load: true
-
             })
 
         }).catch((Error) => {
@@ -57,7 +56,6 @@ export default class NovelList extends Component {
                         renderRow={this
                         ._renderRow
                         .bind(this)}/>
-
                 </View>
                 );
         } else {
@@ -65,26 +63,13 @@ export default class NovelList extends Component {
                 <Text style={styles.welcome}>Loading now.please wait.</Text>
             );
         }
-
     }
 }
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF'
-    },
     welcome: {
-        fontSize: 20,
+        fontSize: 15,
         textAlign: 'center',
         margin: 10
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5
     },
     LatestChapter:{
         fontSize:12,
@@ -102,6 +87,5 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         marginLeft:15,
         marginRight:20,
-        
     },
 });

@@ -1,6 +1,29 @@
 import stringWidth from './stringWidth';
 
-export default function parseContent(str, width, cleanEmptyLine = true) {
+
+export default function getContextArr(testT,width){
+  let lineCount = 17; //十七行 
+        lineWidth = Math.floor((width - 40) * 2 / 22); //22是字体大小，后来属性配置可以修改一下
+        let lines = parseContent(testT, lineWidth);
+        let testa = new Array();
+        let pag ;//定义页数
+        for(pag = 0;pag < 1000 ;pag++){
+            testa[pag] = '';//初始化为文本类型
+            let i = pag*lineCount,size;
+            size = (pag+1)*lineCount>lines.length?  lines.length :  i+lineCount;
+
+            for(;i< size ;i++){
+                testa[pag] += lines[i]+'\n';
+            }
+            if(size == lines.length) break;
+        }
+        totalPage = pag+1;
+        // console.log(testa);
+        return testa ;
+}
+
+
+function parseContent(str, width, cleanEmptyLine = true) {
   if (!str || str == '' || typeof(str) != 'string') {
     return [];
   }

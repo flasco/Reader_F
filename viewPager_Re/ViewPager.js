@@ -179,7 +179,6 @@ var ViewPager = React.createClass({
     }
 
     if (nextProps.dataSource) {
-      console.log('执行了吗？？？');
       var maxPage = nextProps.dataSource.getPageCount();
       this.maxP = maxPage;
       var constrainedPage = Math.max(0, Math.min(this.state.currentPage, maxPage));
