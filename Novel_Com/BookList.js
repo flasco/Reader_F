@@ -42,7 +42,7 @@ export default class BookList extends Component {
             </TouchableOpacity>
         );
     }
-    _renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
+    _renderSeparator = () => {
         return (<View style={styles.solid}/>);
     }
 

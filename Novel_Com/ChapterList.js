@@ -1,15 +1,44 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button} from 'react-native';
 
 
 export default class NovelList extends Component {
+    _FlatList;
+    lengt = 1;
+    static navigationOptions = ({navigation}) => {
+    return {
+        title: `${navigation.state.params.name}`,
+        //左上角的返回键文字, 默认是上一个页面的title  IOS 有效
+        headerBackTitle: ' ',
+        //导航栏的style
+        headerStyle: {
+        backgroundColor: '#000'
+        },
+        headerRight:(
+            <Button 
+                title='gDwn' 
+                onPress={()=>{
+                    that._FlatList.scrollToIndex({viewPosition:0.5,index:this.lengt});
+                }}
+                color='#fff'
+                ></Button>
+        ),
+        headerTitleStyle: {
+        color: '#fff',
+        alignSelf: 'center'
+        }
+    };
+    };
     constructor(props) {
         super(props);
+        that = this;
+        
         this.state = {
             dataSource: '',
             load: false
         };
     }
+    
     componentDidMount() {
         this.getNet();
     }
@@ -24,6 +53,7 @@ export default class NovelList extends Component {
                 });
                 i++;
             }
+            lengt = i-1;
             this.setState({
                 dataSource: n,
                 load: true
@@ -64,10 +94,12 @@ export default class NovelList extends Component {
             return (
                 <View>
                     <FlatList
+                        ref={(c) => this._FlatList = c} 
                         data={this.state.dataSource}
                         renderItem={this._renderItem}
                         ListHeaderComponent={this._header}
                         ItemSeparatorComponent={this._renderSeparator}
+                        getItemLayout={(data, index) => ( {length: 38, offset: 39 * index, index} )}//行高38，分割线1，所以offset=39
                     />
                 </View>
             );
@@ -100,5 +132,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         marginLeft: 15,
         marginRight: 20
+    },
+    gDwn:{
+        color:'#fff'
     }
 });

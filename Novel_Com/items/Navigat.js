@@ -50,6 +50,23 @@ export default class Navigat extends Component {
                     </View>
                 </View>
             );
+        }else if(this.props.choose===3){
+            return(
+                <View style = {styles.ChapterNav}>
+                    <View style={{flex:1,paddingTop:25}}>
+                            <Button title="返回" 
+                                    color="#fff"
+                                    onPress={()=>{this.props.navigation.goBack();}}/>
+                        </View>
+                        <View style={{flex:2}}></View>
+                        <View style={{flex:1,paddingTop:25}}>
+                            <Button title="到底部" 
+                                    color="#fff"
+                                    onPress={this.props.goDown}
+                                    />
+                        </View>
+                </View>
+            );
         }
     }
 }
@@ -62,6 +79,12 @@ const styles = StyleSheet.create({
         width: width,
         position:'absolute',
         top:0,
+        flexDirection:'row'
+    },
+    ChapterNav:{
+        height:64,
+        backgroundColor:'#000',
+        width: width,
         flexDirection:'row'
     },
     Fotter:{

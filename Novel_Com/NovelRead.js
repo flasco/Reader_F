@@ -5,12 +5,13 @@ import ViewPager from '../viewPager_Re/ViewPager';
 import getContextArr from '../util/getContextArr';
 import Readeitems from './items/Readitems';
 import Navigat from './items/Navigat';
-
+var tht ;
 var {height, width} = Dimensions.get('window');
 export default class NovelRead extends Component {
+    
     constructor(props) {
         super(props);
-        that = this;
+        tht = this;
         urnl = props.navigation.state.params.url;
         totalPage = 0;//总的页数
         this.state = {
@@ -21,7 +22,7 @@ export default class NovelRead extends Component {
         };
         this.getNet(urnl,1); //将拿到的url经过服务器解析，设置test
     }
-
+    
     _renderPage = (data, pageID) => {
         return (
             <Readeitems
@@ -41,6 +42,8 @@ export default class NovelRead extends Component {
                 test:responseData,
                 loadFlag:false,
                 Gpag:direct,
+            },()=>{
+                console.log(this.state.loadFlag);
             });
 
         }).catch((Error) => {
@@ -48,12 +51,12 @@ export default class NovelRead extends Component {
         }).done();
     }
     _getNextPage = () => {
-        that.setState({loadFlag:true});
-        that.getNet(that.state.test.next,1);
+        tht.setState({loadFlag:true});
+        tht.getNet(tht.state.test.next,1);
     }
     _getPrevPage= () => {
-        that.setState({loadFlag:true});
-        that.getNet(that.state.test.prev,-1);
+        tht.setState({loadFlag:true});
+        tht.getNet(tht.state.test.prev,-1);
     }
     _clickBoard= () => {
         let flag = this.state.menuF;
@@ -65,7 +68,8 @@ export default class NovelRead extends Component {
                 loadFlag:true,
                 menuF:false
             },()=>{
-              that.getNet(url,1);
+              console.log(this.state.loadFlag);
+              tht.getNet(url,1);
             });
     }
 
