@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
-import {AppRegistry, StyleSheet, Text, View,Dimensions,StatusBar,Button} from 'react-native';
-
+import {AppRegistry, StyleSheet, Text, View,Dimensions,StatusBar} from 'react-native';
 
 import ViewPager from '../viewPager_Re/ViewPager';
 import getContextArr from '../util/getContextArr';
 import Readeitems from './items/Readitems';
 import Navigat from './items/Navigat';
-
-import dateFormat from 'dateformat';
 
 var {height, width} = Dimensions.get('window');
 export default class NovelRead extends Component {
@@ -16,7 +13,6 @@ export default class NovelRead extends Component {
         that = this;
         this.getNet = this.getNet.bind(this);
         urnl = props.navigation.state.params.url;
-        console.log(urnl);
         totalPage = 0;//总的页数
         this.state = {
             loadFlag:true, //判断是出于加载状态还是显示状态
@@ -72,7 +68,6 @@ export default class NovelRead extends Component {
             },()=>{
               that.getNet(url,1);
             });
-        
     }
 
     render() {
@@ -142,48 +137,48 @@ const styles = StyleSheet.create({
 
 });
 
-  // getContextArr1(testT) {
-    //     let line_ = 1;
-    //     let count = 0;
-    //     let tampleL = '';
-    //     let testa = [];
-    //     let n = 0;
-    //     for (let i = 0; i < testT.length; i++) {
-    //         if (line_ == 16) {//  ||(line_ == 16 && count == 16)
-    //             testa[n++] = tampleL.replace(/█/g, "    ");
-    //             tampleL = '';
-    //             line_ = 1;
-    //             count = 0;
-    //         }
-    //         let t = testT.charAt(i);
-            
-    //         if (t == '█') {
-    //             count += 1;
-    //             tampleL += '██';
-    //             i += 1;
-    //         } else if (t == '\n') {
-    //             line_++;
-    //             count = 0;
-    //             tampleL += t;
-    //         } else if (t == '“' || t == '”' || t == '"') {
-    //             count+=0.5;
-    //             tampleL += t;
-    //         } else {
-    //             count++;
-    //             tampleL += t;
-    //         }
-    //         if (count >= 17) {
-    //             if(testT.charAt(i+1)=='\n') {
-    //                 tampleL += '\n';
-    //                 i++;
-    //             }
-    //             line_++;
-    //             count = 0;
-    //         }
-    //         if (i == testT.length - 1) {
-    //             testa[n] = tampleL.replace(/█/g, "    ");
-    //         }
-    //     }
-    //     totalPage = n+1;
-    //     return testa;
-    // }
+// getContextArr1(testT) {
+//     let line_ = 1;
+//     let count = 0;
+//     let tampleL = '';
+//     let testa = [];
+//     let n = 0;
+//     for (let i = 0; i < testT.length; i++) {
+//         if (line_ == 16) {//  ||(line_ == 16 && count == 16)
+//             testa[n++] = tampleL.replace(/█/g, "    ");
+//             tampleL = '';
+//             line_ = 1;
+//             count = 0;
+//         }
+//         let t = testT.charAt(i);
+        
+//         if (t == '█') {
+//             count += 1;
+//             tampleL += '██';
+//             i += 1;
+//         } else if (t == '\n') {
+//             line_++;
+//             count = 0;
+//             tampleL += t;
+//         } else if (t == '“' || t == '”' || t == '"') {
+//             count+=0.5;
+//             tampleL += t;
+//         } else {
+//             count++;
+//             tampleL += t;
+//         }
+//         if (count >= 17) {
+//             if(testT.charAt(i+1)=='\n') {
+//                 tampleL += '\n';
+//                 i++;
+//             }
+//             line_++;
+//             count = 0;
+//         }
+//         if (i == testT.length - 1) {
+//             testa[n] = tampleL.replace(/█/g, "    ");
+//         }
+//     }
+//     totalPage = n+1;
+//     return testa;
+// }

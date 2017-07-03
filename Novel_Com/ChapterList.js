@@ -41,9 +41,7 @@ export default class NovelList extends Component {
                     this.props.navigation.state.params.callback(rowData.url);
                     this.props.navigation.goBack();
                 }}>
-            <View style={{
-                height: 38
-            }}>
+            <View style={{height: 38}}>
                 <Text style={styles.rowStyle}>{rowData.title}</Text>
             </View>
             </TouchableOpacity>

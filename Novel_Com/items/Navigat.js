@@ -8,6 +8,9 @@ var {height, width} = Dimensions.get('window');
  * 用在了NovelRead.js中
  */
 export default class Navigat extends Component {
+    shouldComponentUpdate(){
+        return false;//设置成静态组件，不用实时render
+    }
     render(){
         if(this.props.choose===1){
             return(
@@ -19,9 +22,7 @@ export default class Navigat extends Component {
                                         this.props.navigation
                                         .navigate('ChaL',{
                                             url:this.props.urlx,name:this.props.bname,
-                                            callback:(url)=>{
-                                                this.props.getChapterUrl(url);
-                                            }
+                                            callback:(url)=>this.props.getChapterUrl(url)
                                         });
                                     }}/>
                         </View>

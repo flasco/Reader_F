@@ -4,22 +4,21 @@ import {AppRegistry, StyleSheet, Text, View} from 'react-native';
 import dateFormat from 'dateformat';
 
 export default class Readitems extends Component {
-    Time = dateFormat(new Date(), "H:MM");
-    presPag = this.props.presPag;
-    totalPage = this.props.totalPage;
-    data = this.props.data;
-    title = this.props.title;
+    shouldComponentUpdate(){
+        return false;
+    }
+    
     render(){
         return (
             <View style={styles.container}>
-                <Text style={styles.title}>{this.title}</Text>
-                <Text style={styles.textsize} numberOfLines={21}>{this.data}</Text>
+                <Text style={styles.title}>{this.props.title}</Text>
+                <Text style={styles.textsize} numberOfLines={21}>{this.props.data}</Text>
                 <View style={styles.bottView}>
-                    <Text style={styles.bottom1}>{this.Time}</Text>
-                    <Text style={styles.bottom2} >{this.presPag}/{this.totalPage} </Text>
+                    <Text style={styles.bottom1}>{dateFormat(new Date(), 'H:MM')}</Text>
+                    <Text style={styles.bottom2} >{this.props.presPag}/{this.props.totalPage} </Text>
                 </View>
             </View>
-        )
+        );
     }
 }
 

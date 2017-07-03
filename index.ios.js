@@ -14,17 +14,6 @@ import BookList from './Novel_Com/BookList';
 import {StackNavigator} from 'react-navigation';
 // export default
 
-const navigationOptions = {
-  header: {
-    style: {
-      color: 'black'
-    },
-    tintColor: {
-      color: 'grey'
-    }
-  }
-};
-
 BookList.navigationOptions = ({navigation}) => {
   return {
     title: '古意流苏',
@@ -60,15 +49,9 @@ NovelRead.navigationOptions = ({navigation}) => {
 };
 
 const Reader_F = StackNavigator({
-  Home: {
-    screen: BookList
-  },
-  ChaL: {
-    screen: ChapterList
-  },
-  Read: {
-    screen: NovelRead
-  }
+  Home: { screen: BookList },
+  ChaL: { screen: ChapterList },
+  Read: { screen: NovelRead }
 }, {
   mode: 'modal',
   navigationOptions: {
