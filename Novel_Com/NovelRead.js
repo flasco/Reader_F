@@ -138,8 +138,6 @@ const styles = StyleSheet.create({
 });
 
 
-
-
 // getContextArr1(testT) {
 //     let line_ = 1;
 //     let count = 0;
