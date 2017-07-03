@@ -25,7 +25,7 @@ export default class BookList extends Component {
     componentDidMount() {
         // this.getNet();
     }
-    _renderRow(rowData) {
+    _renderRow = (rowData) => {
         const {navigate} = this.props.navigation;
         var urlx = 'http://www.23us.com/html/65/65044/26566546.html';
         return (
@@ -56,9 +56,7 @@ export default class BookList extends Component {
                 }}
                     dataSource={this.state.dataSource}
                     renderSeparator={this._renderSeparator}
-                    renderRow={this
-                    ._renderRow
-                    .bind(this)}/>
+                    renderRow={this._renderRow}/>
             </View>
         );
     }

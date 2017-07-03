@@ -11,7 +11,6 @@ export default class NovelRead extends Component {
     constructor(props) {
         super(props);
         that = this;
-        this.getNet = this.getNet.bind(this);
         urnl = props.navigation.state.params.url;
         totalPage = 0;//总的页数
         this.state = {
@@ -23,7 +22,7 @@ export default class NovelRead extends Component {
         this.getNet(urnl,1); //将拿到的url经过服务器解析，设置test
     }
 
-    _renderPage(data, pageID) {
+    _renderPage = (data, pageID) => {
         return (
             <Readeitems
             title={this.state.test.title}
@@ -34,7 +33,7 @@ export default class NovelRead extends Component {
         );
     }
 
-    getNet(nurl,direct) {
+    getNet = (nurl,direct) => {
         let url = 'http://testdb.leanapp.cn/Analy_x?action=2&url='+nurl;//this.state.test.next
         fetch(url).then((Response) => Response.json()).then(responseData => {
             console.log(responseData.title);
@@ -48,19 +47,19 @@ export default class NovelRead extends Component {
             console.warn(Error);
         }).done();
     }
-    _getNextPage(){
+    _getNextPage = () => {
         that.setState({loadFlag:true});
         that.getNet(that.state.test.next,1);
     }
-    _getPrevPage(){
+    _getPrevPage= () => {
         that.setState({loadFlag:true});
         that.getNet(that.state.test.prev,-1);
     }
-    _clickBoard(){
+    _clickBoard= () => {
         let flag = this.state.menuF;
         this.setState({menuF:!flag});
     }
-    _getChapterUrl(urln){
+    _getChapterUrl = (urln) => {
         let url = urln;
         this.setState({
                 loadFlag:true,
@@ -94,7 +93,7 @@ export default class NovelRead extends Component {
                 urlx = {urlx}
                 bname = {this.props.navigation.state.params.name}
                 choose={1}
-                getChapterUrl={this._getChapterUrl.bind(this)}
+                getChapterUrl={this._getChapterUrl}
                 />
                 ):(false)}
 
@@ -102,10 +101,10 @@ export default class NovelRead extends Component {
                 dataSource={new ViewPager.DataSource({
                             pageHasChanged: (p1, p2) => p1 !== p2
                             }).cloneWithPages(getContextArr(this.state.test.content,width))}
-                renderPage={this._renderPage.bind(this)}
-                getNextPage={this._getNextPage.bind(this)}
-                getPrevPage={this._getPrevPage.bind(this)}
-                clickBoard={this._clickBoard.bind(this)}
+                renderPage={this._renderPage}
+                getNextPage={this._getNextPage}
+                getPrevPage={this._getPrevPage}
+                clickBoard={this._clickBoard}
                 initialPage={0}
                 isLoop={false}
                 autoPlay={false}
