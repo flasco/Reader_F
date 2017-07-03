@@ -64,6 +64,16 @@ export default class NovelRead extends Component {
         let flag = this.state.menuF;
         this.setState({menuF:!flag});
     }
+    _getChapterUrl(urln){
+        let url = urln;
+        this.setState({
+                loadFlag:true,
+                menuF:false
+            },()=>{
+              that.getNet(url,1);
+            });
+        
+    }
 
     render() {
         if(this.state.loadFlag===true){
@@ -89,6 +99,7 @@ export default class NovelRead extends Component {
                 urlx = {urlx}
                 bname = {this.props.navigation.state.params.name}
                 choose={1}
+                getChapterUrl={this._getChapterUrl.bind(this)}
                 />
                 ):(false)}
 

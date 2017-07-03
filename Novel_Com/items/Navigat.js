@@ -17,7 +17,12 @@ export default class Navigat extends Component {
                             color="#fff"
                                     onPress={()=>{
                                         this.props.navigation
-                                        .navigate('ChaL',{url:this.props.urlx,name:this.props.bname});
+                                        .navigate('ChaL',{
+                                            url:this.props.urlx,name:this.props.bname,
+                                            callback:(url)=>{
+                                                this.props.getChapterUrl(url);
+                                            }
+                                        });
                                     }}/>
                         </View>
                         <View style={{flex:2}}></View>

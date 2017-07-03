@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, ListView} from 'react-native';
+import {StyleSheet, Text, View, ListView,TouchableOpacity} from 'react-native';
 
 export default class NovelList extends Component {
     constructor(props) {
@@ -36,11 +36,17 @@ export default class NovelList extends Component {
     }
     _renderRow(rowData) {
         return (
+            <TouchableOpacity
+                onPress={() => {
+                    this.props.navigation.state.params.callback(rowData.url);
+                    this.props.navigation.goBack();
+                }}>
             <View style={{
                 height: 38
             }}>
                 <Text style={styles.rowStyle}>{rowData.title}</Text>
             </View>
+            </TouchableOpacity>
         );
     }
     _renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
