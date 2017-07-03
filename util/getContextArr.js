@@ -1,27 +1,28 @@
 import stringWidth from './stringWidth';
 
-
-export default function getContextArr(testT,width){
-  let lineCount = 17; //十七行 
-        lineWidth = Math.floor((width - 40) * 2 / 22); //22是字体大小，后来属性配置可以修改一下
-        let lines = parseContent(testT, lineWidth);
-        let testa = new Array();
-        let pag ;//定义页数
-        for(pag = 0;pag < 1000 ;pag++){
-            testa[pag] = '';//初始化为文本类型
-            let i = pag*lineCount,size;
-            size = (pag+1)*lineCount>lines.length?  lines.length :  i+lineCount;
-
-            for(;i< size ;i++){
-                testa[pag] += lines[i]+'\n';
-            }
-            if(size == lines.length) break;
-        }
-        totalPage = pag+1;
-        // console.log(testa);
-        return testa ;
+export default function getContextArr(testT, width) {
+  let lineCount = 17; //十七行
+  lineWidth = Math.floor((width - 40) * 2 / 22); //22是字体大小，后来属性配置可以修改一下
+  let lines = parseContent(testT, lineWidth);
+  let testa = new Array();
+  let pag; //定义页数
+  for (pag = 0; pag < 1000; pag++) {
+    testa[pag] = ''; //初始化为文本类型
+    let i = pag * lineCount,
+      size;
+    size = (pag + 1) * lineCount > lines.length
+      ? lines.length
+      : i + lineCount;
+    for (; i < size; i++) {
+      testa[pag] += lines[i] + '\n';
+    }
+    if (size == lines.length) 
+      break;
+  }
+  totalPage = pag + 1;
+  // console.log(testa);
+  return testa;
 }
-
 
 function parseContent(str, width, cleanEmptyLine = true) {
   if (!str || str == '' || typeof(str) != 'string') {
@@ -35,12 +36,11 @@ function parseContent(str, width, cleanEmptyLine = true) {
     try {
       let s = str[i];
       let code = s.charCodeAt();
-
       if (code == 10 || code == 13) {
         if (currentLine.trim() == '' && lines.length > 1 && lines[lines.length - 1].trim() == '') {
           //过滤空行
         } else {
-          if(currentLine!= ''){
+          if (currentLine != '') {
             lines.push(currentLine);
           }
         }
@@ -48,14 +48,12 @@ function parseContent(str, width, cleanEmptyLine = true) {
         currentLineWidth = 0;
         continue;
       }
-
       var sWidth = stringWidth(s);
       if (currentLineWidth + sWidth > width) {
         lines.push(currentLine);
         currentLine = '';
         currentLineWidth = 0;
       }
-
       currentLine += s;
       currentLineWidth += sWidth;
     } catch (error) {
@@ -67,14 +65,14 @@ function parseContent(str, width, cleanEmptyLine = true) {
   return lines;
 }
 
-function cleanContent(str){
-    let lines = str.split('\n');
-    let newlines = [];
-    for (var i in lines) {
-        let s = lines[i].trim();
-        if(s.length>0){
-            newlines.push('        '+s);
-        }
+function cleanContent(str) {
+  let lines = str.split('\n');
+  let newlines = [];
+  for (var i in lines) {
+    let s = lines[i].trim();
+    if (s.length > 0) {
+      newlines.push('        ' + s);
     }
-    return newlines.join('\n\n');
+  }
+  return newlines.join('\n\n');
 }

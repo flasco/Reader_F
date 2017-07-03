@@ -15,7 +15,10 @@ export default class Navigat extends Component {
                         <View style={{flex:1,paddingTop:25}}>
                             <Button title="目录" 
                             color="#fff"
-                                    onPress={()=>{this.props.navigation.navigate('ChaL',{url:this.props.urlx,name:this.props.bname});}}/>
+                                    onPress={()=>{
+                                        this.props.navigation
+                                        .navigate('ChaL',{url:this.props.urlx,name:this.props.bname});
+                                    }}/>
                         </View>
                         <View style={{flex:2}}></View>
                         <View style={{flex:1,paddingTop:25}}>
@@ -24,7 +27,7 @@ export default class Navigat extends Component {
                                     onPress={()=>{this.props.navigation.goBack();}}/>
                         </View>
                     </View>
-            )
+            );
         }else if(this.props.choose===2){
             return(
                 <View style = {styles.Fotter}>
@@ -40,7 +43,7 @@ export default class Navigat extends Component {
                                 onPress={()=>{this.props.navigation.goBack();}}/>
                     </View>
                 </View>
-            )
+            );
         }
     }
 }

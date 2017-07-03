@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AppRegistry, StyleSheet, Text, View, ListView,ScrollView} from 'react-native';
+import {StyleSheet, Text, View, ListView} from 'react-native';
 
 export default class NovelList extends Component {
     constructor(props) {
@@ -16,9 +16,10 @@ export default class NovelList extends Component {
         this.getNet();
     }
     getNet() {
-        let url = "http://testdb.leanapp.cn/Analy_x?action=1&url=http://www.23us.co" +
-                "m/html/65/65044/";
-        // url = 'http://testdb.leanapp.cn/Analy_x?action=2&url=http://www.23us.com/html/65/65044/26566546.html'
+        let url = 'http://testdb.leanapp.cn/Analy_x?action=1&url=http://www.23us.com/html/65/65044/';
+        // url =
+        // 'http://testdb.leanapp.cn/Analy_x?action=2&url=http://www.23us.com/html/65/65
+        // 0 44/26566546.html'
         fetch(url).then((Response) => Response.json()).then(responseData => {
             // console.log(responseData[0].title);
             this.setState({
@@ -27,7 +28,7 @@ export default class NovelList extends Component {
                     .dataSource
                     .cloneWithRows(responseData.reverse()),
                 load: true
-            })
+            });
 
         }).catch((Error) => {
             console.warn(Error);
@@ -35,16 +36,16 @@ export default class NovelList extends Component {
     }
     _renderRow(rowData) {
         return (
-            <View style={{height:38}}>
-                    <Text style={styles.rowStyle}>{rowData.title}</Text>
+            <View style={{
+                height: 38
+            }}>
+                <Text style={styles.rowStyle}>{rowData.title}</Text>
             </View>
         );
     }
     _renderSeparator(sectionID, rowID, adjacentRowHighlighted) {
-    return (
-      <View style={styles.solid} />
-    );
-  }
+        return (<View style={styles.solid}/>);
+    }
 
     render() {
         if (this.state.load === true) {
@@ -57,7 +58,7 @@ export default class NovelList extends Component {
                         ._renderRow
                         .bind(this)}/>
                 </View>
-                );
+            );
         } else {
             return (
                 <Text style={styles.welcome}>Loading now.please wait.</Text>
@@ -71,21 +72,21 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 10
     },
-    LatestChapter:{
-        fontSize:12,
-        textAlign:'center',
-        marginTop:20,
-        marginBottom:10,
-        color:'#8a8a8a'
+    LatestChapter: {
+        fontSize: 12,
+        textAlign: 'center',
+        marginTop: 20,
+        marginBottom: 10,
+        color: '#8a8a8a'
     },
-    rowStyle:{
-        marginTop:12,
-        marginLeft:15,
+    rowStyle: {
+        marginTop: 12,
+        marginLeft: 15
     },
-    solid:{
-        height: 0.2, 
+    solid: {
+        height: 0.2,
         backgroundColor: 'black',
-        marginLeft:15,
-        marginRight:20,
-    },
+        marginLeft: 15,
+        marginRight: 20
+    }
 });

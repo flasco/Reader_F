@@ -5,7 +5,7 @@ import {AppRegistry, StyleSheet, Text, View,Dimensions,StatusBar,Button} from 'r
 import ViewPager from '../viewPager_Re/ViewPager';
 import getContextArr from '../util/getContextArr';
 import Readeitems from './items/Readitems';
-import Navigat from './items/Navigat'
+import Navigat from './items/Navigat';
 
 import dateFormat from 'dateformat';
 
@@ -16,14 +16,14 @@ export default class NovelRead extends Component {
         that = this;
         this.getNet = this.getNet.bind(this);
         urnl = props.navigation.state.params.url;
-        console.log(urnl)
+        console.log(urnl);
         totalPage = 0;//总的页数
         this.state = {
             loadFlag:true, //判断是出于加载状态还是显示状态
             test:'', //作为章节内容的主要获取来源。
             menuF:false, //判断导航栏是否应该隐藏
             Gpag:0, //判断是前往上一章（-1）还是下一章（1）
-        }
+        };
         this.getNet(urnl,1); //将拿到的url经过服务器解析，设置test
     }
 
@@ -39,14 +39,14 @@ export default class NovelRead extends Component {
     }
 
     getNet(nurl,direct) {
-        let url = "http://testdb.leanapp.cn/Analy_x?action=2&url="+nurl;//this.state.test.next
+        let url = 'http://testdb.leanapp.cn/Analy_x?action=2&url='+nurl;//this.state.test.next
         fetch(url).then((Response) => Response.json()).then(responseData => {
             console.log(responseData.title);
             this.setState({
                 test:responseData,
                 loadFlag:false,
                 Gpag:direct,
-            })
+            });
 
         }).catch((Error) => {
             console.warn(Error);
