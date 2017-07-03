@@ -1,7 +1,7 @@
 # Reader_F
 This is a novel reader app powered by react-native,but still now ,it's just a Partially Prepared Products.
 
-###it use:
+### it use:
 - react-navigation
 - view-pager
 - FlatList
