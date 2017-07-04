@@ -3,8 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button} from 'react
 
 
 export default class NovelList extends Component {
-    _FlatList;
-    lengt = 1;
+    _FlatList; lengt = 1;
     static navigationOptions = ({navigation}) => {
     return {
         title: `${navigation.state.params.name}`,
