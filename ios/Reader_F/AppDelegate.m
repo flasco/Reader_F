@@ -9,8 +9,10 @@
 
 #import "AppDelegate.h"
 
+
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import "SplashScreen.h"
 
 @implementation AppDelegate
 
@@ -34,7 +36,10 @@
   self.window.rootViewController = rootViewController;
    [NSThread sleepForTimeInterval:2];//启动画面延时
   [self.window makeKeyAndVisible];
+  
+  [SplashScreen show];
   return YES;
 }
+
 
 @end

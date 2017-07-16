@@ -7,8 +7,10 @@ import {
     ListView,
     Button,
     TouchableOpacity,
-    StatusBar
+    StatusBar,
 } from 'react-native';
+
+import SplashScreen from 'react-native-splash-screen'
 
 export default class BookList extends Component {
 
@@ -23,7 +25,7 @@ export default class BookList extends Component {
         };
     }
     componentDidMount() {
-        // this.getNet();
+        SplashScreen.hide();
     }
     _renderRow = (rowData) => {
         const {navigate} = this.props.navigation;
