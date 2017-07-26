@@ -5,8 +5,11 @@ import ViewPager from '../viewPager_Re/ViewPager';
 import getContextArr from '../util/getContextArr';
 import Readeitems from './items/Readitems';
 import Navigat from './items/Navigat';
+import DeviceStorage from '../util/DeviceStorage';
+
 var tht ;
 var {height, width} = Dimensions.get('window');
+
 export default class NovelRead extends Component {
     
     constructor(props) {
@@ -14,6 +17,8 @@ export default class NovelRead extends Component {
         tht = this;
         urnl = props.navigation.state.params.url;
         totalPage = 0;//总的页数
+        DeviceStorage.getString('test').then(vakl=>console.log(vakl));
+
         this.state = {
             loadFlag:true, //判断是出于加载状态还是显示状态
             test:'', //作为章节内容的主要获取来源。

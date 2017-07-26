@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     AppRegistry,
     StyleSheet,
@@ -10,6 +10,8 @@ import {
     StatusBar,
 } from 'react-native';
 
+import DeviceStorage from '../util/DeviceStorage'
+
 import SplashScreen from 'react-native-splash-screen'
 
 export default class BookList extends Component {
@@ -19,47 +21,91 @@ export default class BookList extends Component {
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
+        let booklist = [
+            {
+                bookName: '美食爱好者',
+                author: '菜猫',
+                url: 'http://www.biqiuge.com/book/6888/',
+                recordChapter:'http://www.biqiuge.com/book/6888/4560933.html',
+                latestChapter: '待检测',
+                plantformId:5,
+            }, {
+                bookName: '直死无限',
+                author: '如倾如诉',
+                url: 'http://www.biqiuge.com/book/4912/',
+                recordChapter:'http://www.biqiuge.com/book/4912/3102895.html',
+                latestChapter: '待检测',
+                plantformId:5,
+            }, {
+                bookName: '测试1号',
+                author: '11',
+                url: 'http://www.biqiuge.com/book/4912/',
+                recordChapter:'http://www.biqiuge.com/book/4912/3102895.html',
+                latestChapter: '待检测',
+                plantformId:5,
+            }
+        ];
+        // DeviceStorage.clear('booklist');
+        DeviceStorage.get('booklist').then(val => {
+            if (val === null) {
+                console.log('检测发现你是第一次使用本app，没有书架记录。');
+                DeviceStorage.save('booklist', booklist);
+                this.setState({
+                    dataSource: ds.cloneWithRows(booklist),
+                    load: false
+                });
+            } else {
+                console.log('have');
+                this.setState({
+                    dataSource: ds.cloneWithRows(val),
+                    load: false
+                });
+            }
+        });
+
         this.state = {
-            dataSource: ds.cloneWithRows(['武林高手', '美食爱好者']),
-            load: false
+            dataSource: ds.cloneWithRows(booklist),
+            load: true
         };
     }
     componentDidMount() {
         SplashScreen.hide();
     }
     _renderRow = (rowData) => {
-        const {navigate} = this.props.navigation;
-        var urlx = 'http://www.23us.com/html/65/65044/26566546.html';
+        console.log(rowData);
+        const { navigate } = this.props.navigation;
+        var urlx = rowData.recordChapter;
         return (
             <TouchableOpacity
                 onPress={() => navigate('Read', {
-                url: urlx,
-                name: rowData
-            })}>
+                    url: urlx,
+                    name: rowData.bookName
+                })}>
                 <View style={{
                     height: 38
                 }}>
-                    <Text style={styles.rowStyle}>{rowData}</Text>
+                    <Text style={styles.rowStyle}>{rowData.bookName}</Text>
                 </View>
             </TouchableOpacity>
         );
     }
     _renderSeparator = () => {
-        return (<View style={styles.solid}/>);
+        return (<View style={styles.solid} />);
     }
 
     render() {
         return (
-            <View style={styles.container}>
-                <StatusBar barStyle="light-content"></StatusBar>
-                <ListView
-                    style={{
-                    flex: 1
-                }}
-                    dataSource={this.state.dataSource}
-                    renderSeparator={this._renderSeparator}
-                    renderRow={this._renderRow}/>
-            </View>
+            this.state.load ? (false) :
+                (<View style={styles.container}>
+                    <StatusBar barStyle="light-content"></StatusBar>
+                    <ListView
+                        style={{
+                            flex: 1
+                        }}
+                        dataSource={this.state.dataSource}
+                        renderSeparator={this._renderSeparator}
+                        renderRow={this._renderRow} />
+                </View>)
         );
     }
 }

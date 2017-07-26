@@ -5,6 +5,7 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button} from 'react
 export default class NovelList extends Component {
     _FlatList; lengt = 1;
     static navigationOptions = ({navigation}) => {
+        // console.log(navigation.state.params.name);
     return {
         title: `${navigation.state.params.name}`,
         //左上角的返回键文字, 默认是上一个页面的title  IOS 有效
