@@ -40,10 +40,11 @@ export default class NovelList extends Component {
     }
     
     componentDidMount() {
-        this.getNet();
+        // let url = this.props.navigation.state.params.url;
+        this.getNet(this.props.navigation.state.params.url);
     }
-    getNet = () => {
-        let url = 'http://testdb.leanapp.cn/Analy_x?action=1&url=http://www.23us.com/html/65/65044/';
+    getNet = (nurl) => {
+        let url = 'http://testdb.leanapp.cn/Analy_x?action=1&url='+nurl;
         fetch(url).then((Response) => Response.json()).then(responseData => {
             let data = responseData.reverse();
             let n  = [];

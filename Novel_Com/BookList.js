@@ -10,7 +10,7 @@ import {
     StatusBar,
 } from 'react-native';
 
-import DeviceStorage from '../util/DeviceStorage'
+// import DeviceStorage from '../util/DeviceStorage'
 
 import SplashScreen from 'react-native-splash-screen'
 
@@ -72,14 +72,14 @@ export default class BookList extends Component {
         SplashScreen.hide();
     }
     _renderRow = (rowData) => {
-        console.log(rowData);
+        // console.log(rowData);
         const { navigate } = this.props.navigation;
-        var urlx = rowData.recordChapter;
+        // var urlx = rowData.recordChapter;
         return (
             <TouchableOpacity
                 onPress={() => navigate('Read', {
-                    url: urlx,
-                    name: rowData.bookName
+                    book: rowData,
+                    //name: rowData.bookName
                 })}>
                 <View style={{
                     height: 38

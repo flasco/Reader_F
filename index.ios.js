@@ -14,6 +14,10 @@ import BookList from './Novel_Com/BookList';
 import {StackNavigator} from 'react-navigation';
 // export default
 
+import DeviceStorage from './util/DeviceStorage'
+
+global.DeviceStorage = DeviceStorage;
+
 BookList.navigationOptions = ({navigation}) => {
   return {
     title: '古意流苏',

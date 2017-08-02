@@ -21,7 +21,8 @@ export default class Navigat extends Component {
                                     onPress={()=>{
                                         this.props.navigation
                                         .navigate('ChaL',{
-                                            url:this.props.urlx,name:this.props.bname,
+                                            url:this.props.urlx,
+                                            name:this.props.bname,
                                             callback:(url)=>this.props.getChapterUrl(url)
                                         });
                                     }}/>
