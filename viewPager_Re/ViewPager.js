@@ -157,7 +157,7 @@ var ViewPager = React.createClass({
   componentDidMount() {
     // console.log(this.props.dataSource);
     //私人修改
-    console.log('nextProps.Gpag:'+this.props.Gpag);
+    // console.log('nextProps.Gpag:'+this.props.Gpag);
       if(this.props.Gpag==1){
         this.goToPage(0, false);
       }else if(this.props.Gpag==-1){
@@ -227,7 +227,10 @@ var ViewPager = React.createClass({
 
   movePage(step, gs, animate = true) {
     var pageCount = this.maxP;
+    // console.log(step+'...'+this.state.currentPage)
     var pageNumber = this.state.currentPage + step;
+    step!==0?this.props.getCurrentPage(pageNumber+1):false;
+
     //私人修改
     if(pageNumber>=pageCount&&this.state.toprev==0){
       this.props.getNextPage();

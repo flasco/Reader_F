@@ -14,6 +14,8 @@ import {
 
 import SplashScreen from 'react-native-splash-screen'
 
+var booklist;
+
 export default class BookList extends Component {
 
     constructor(props) {
@@ -21,33 +23,40 @@ export default class BookList extends Component {
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
-        let booklist = [
-            {
-                bookName: '美食爱好者',
-                author: '菜猫',
-                url: 'http://www.biqiuge.com/book/6888/',
-                recordChapter:'http://www.biqiuge.com/book/6888/4560933.html',
-                latestChapter: '待检测',
-                plantformId:5,
-            }, {
-                bookName: '直死无限',
-                author: '如倾如诉',
-                url: 'http://www.biqiuge.com/book/4912/',
-                recordChapter:'http://www.biqiuge.com/book/4912/3102895.html',
-                latestChapter: '待检测',
-                plantformId:5,
-            }, {
-                bookName: '测试1号',
-                author: '11',
-                url: 'http://www.biqiuge.com/book/4912/',
-                recordChapter:'http://www.biqiuge.com/book/4912/3102895.html',
-                latestChapter: '待检测',
-                plantformId:5,
-            }
-        ];
+        this.state = {
+            dataSource: '',
+            load: true
+        };
         // DeviceStorage.clear('booklist');
         DeviceStorage.get('booklist').then(val => {
             if (val === null) {
+                booklist = [
+                    {
+                        bookName: '美食爱好者',
+                        author: '菜猫',
+                        url: 'http://www.biqiuge.com/book/6888/',
+                        recordChapter: 'http://www.biqiuge.com/book/6888/4560933.html',
+                        latestChapter: '待检测',
+                        recordPage:1,
+                        plantformId: 5,
+                    }, {
+                        bookName: '直死无限',
+                        author: '如倾如诉',
+                        url: 'http://www.biqiuge.com/book/4912/',
+                        recordChapter: 'http://www.biqiuge.com/book/4912/3102895.html',
+                        latestChapter: '待检测',
+                        recordPage:1,
+                        plantformId: 5,
+                    }, {
+                        bookName: '测试1号',
+                        author: '11',
+                        url: 'http://www.biqiuge.com/book/4912/',
+                        recordChapter: 'http://www.biqiuge.com/book/4912/3102895.html',
+                        latestChapter: '待检测',
+                        recordPage:1,
+                        plantformId: 5,
+                    }
+                ];
                 console.log('检测发现你是第一次使用本app，没有书架记录。');
                 DeviceStorage.save('booklist', booklist);
                 this.setState({
@@ -56,6 +65,8 @@ export default class BookList extends Component {
                 });
             } else {
                 console.log('have');
+                booklist = val;
+                
                 this.setState({
                     dataSource: ds.cloneWithRows(val),
                     load: false
@@ -63,10 +74,7 @@ export default class BookList extends Component {
             }
         });
 
-        this.state = {
-            dataSource: ds.cloneWithRows(booklist),
-            load: true
-        };
+        
     }
     componentDidMount() {
         SplashScreen.hide();
@@ -78,7 +86,8 @@ export default class BookList extends Component {
         return (
             <TouchableOpacity
                 onPress={() => navigate('Read', {
-                    book: rowData,
+                    bookNum:booklist.indexOf(rowData),
+                    //booklist:booklist,
                     //name: rowData.bookName
                 })}>
                 <View style={{
