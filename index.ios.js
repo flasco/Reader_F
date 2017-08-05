@@ -18,21 +18,21 @@ import DeviceStorage from './util/DeviceStorage'
 
 global.DeviceStorage = DeviceStorage;
 
-BookList.navigationOptions = ({navigation}) => {
-  return {
-    title: '古意流苏',
-    //左上角的返回键文字, 默认是上一个页面的title  IOS 有效
-    headerBackTitle: ' ',
-    //导航栏的style
-    headerStyle: {
-      backgroundColor: '#000'
-    },
-    headerTitleStyle: {
-      color: '#fff',
-      alignSelf: 'center'
-    }
-  };
-};
+// BookList.navigationOptions = ({navigation}) => {
+//   return {
+//     title: '古意流苏',
+//     //左上角的返回键文字, 默认是上一个页面的title  IOS 有效
+//     headerBackTitle: ' ',
+//     //导航栏的style
+//     headerStyle: {
+//       backgroundColor: '#000'
+//     },
+//     headerTitleStyle: {
+//       color: '#fff',
+//       alignSelf: 'center'
+//     }
+//   };
+// };
 
 NovelRead.navigationOptions = ({navigation}) => {
   return {header: null};

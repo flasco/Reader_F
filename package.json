@@ -12,7 +12,9 @@
     "json": "^9.0.6",
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.2",
+    "react-native-side-menu": "^1.0.2",
     "react-native-splash-screen": "^2.1.0",
+    "react-native-vector-icons": "^4.3.0",
     "react-native-viewpager": "^0.2.13",
     "react-navigation": "^1.0.0-beta.11",
     "strip-ansi": "^4.0.0"
