@@ -1,0 +1,14 @@
+Foundation by ZURB, Inc. (v3.0, 283 icons)
+
+list               书架设置
+list-thumbnails    章节目录
+plus               添加书籍
+widget             设置
+magnifying-glass   搜索
+graph-horizontal   排行按钮
+burst              黑白色就当做日夜间模式的切换好了
+
+
+import Icon from 'react-native-vector-icons/Foundation';
+
+<Icon name={'list'}size={30}color={selected ? '#3e9ce9' : '#000000'}/>

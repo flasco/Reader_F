@@ -79,6 +79,7 @@ export default class NovelRead extends Component {
                 loadFlag: false,
                 Gpag: direct,
             })
+        
         }
     }
     _getNextPage = () => {
@@ -109,14 +110,14 @@ export default class NovelRead extends Component {
         });
     }
     _getCurrentPage = pag => {
-        // console.log(pag)
+        console.log(pag)
         pag = pag === 0 ? 1 : pag;
         booklist[this.state.currentNum].recordPage = pag;
         DeviceStorage.save('booklist', booklist);
-        // console.log('this pag is:'+pag);
     }
 
     render() {
+        
         if (this.state.loadFlag === true) {
             return (
                 <View style={styles.container}>
@@ -181,50 +182,3 @@ const styles = StyleSheet.create({
     },
 
 });
-
-
-// getContextArr1(testT) {
-//     let line_ = 1;
-//     let count = 0;
-//     let tampleL = '';
-//     let testa = [];
-//     let n = 0;
-//     for (let i = 0; i < testT.length; i++) {
-//         if (line_ == 16) {//  ||(line_ == 16 && count == 16)
-//             testa[n++] = tampleL.replace(/█/g, "    ");
-//             tampleL = '';
-//             line_ = 1;
-//             count = 0;
-//         }
-//         let t = testT.charAt(i);
-
-//         if (t == '█') {
-//             count += 1;
-//             tampleL += '██';
-//             i += 1;
-//         } else if (t == '\n') {
-//             line_++;
-//             count = 0;
-//             tampleL += t;
-//         } else if (t == '“' || t == '”' || t == '"') {
-//             count+=0.5;
-//             tampleL += t;
-//         } else {
-//             count++;
-//             tampleL += t;
-//         }
-//         if (count >= 17) {
-//             if(testT.charAt(i+1)=='\n') {
-//                 tampleL += '\n';
-//                 i++;
-//             }
-//             line_++;
-//             count = 0;
-//         }
-//         if (i == testT.length - 1) {
-//             testa[n] = tampleL.replace(/█/g, "    ");
-//         }
-//     }
-//     totalPage = n+1;
-//     return testa;
-// }

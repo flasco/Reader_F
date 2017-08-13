@@ -21,6 +21,8 @@ var DefaultViewPageIndicator = require('./DefaultViewPageIndicator');
 var deviceWidth = Dimensions.get('window').width;
 var ViewPagerDataSource = require('./ViewPagerDataSource');
 
+// var initf = 0;
+
 var ViewPager = React.createClass({
   mixins: [TimerMixin],
 
@@ -146,12 +148,13 @@ var ViewPager = React.createClass({
       this.childIndex = 1;
       this.state.scrollValue.setValue(1);
     }
-    if(this.props.initialPage){
+    // if(initf === 0){
       var initialPage = Number(this.props.initialPage);
-      if (initialPage > 0) {
-        this.goToPage(initialPage, false);
-      }
-    }
+      // initf = 1;
+        if (initialPage > 0) {
+          this.goToPage(initialPage, false);
+        }
+    // }
   },
 
   componentDidMount() {
@@ -215,6 +218,7 @@ var ViewPager = React.createClass({
   goToPage(pageNumber, animate = true) {
     
     var pageCount = this.maxP;
+    // if(pageNumber>pageCount) pageNumber = pageCount - 1;
     console.log('pageNumber:'+pageNumber+'    pageCount:'+pageCount);
     if (pageNumber < 0 || pageNumber > pageCount) {
       console.error('Invalid page number: ', pageNumber);
@@ -227,19 +231,21 @@ var ViewPager = React.createClass({
 
   movePage(step, gs, animate = true) {
     var pageCount = this.maxP;
-    // console.log(step+'...'+this.state.currentPage)
+    // console.log('...'+ pageCount)
     var pageNumber = this.state.currentPage + step;
-    step!==0?this.props.getCurrentPage(pageNumber+1):false;
+    
 
     //私人修改
     if(pageNumber>=pageCount&&this.state.toprev==0){
+      pageNumber = 0;
+      this.props.getCurrentPage(pageNumber+1);
       this.props.getNextPage();
       return;
     }else if(pageNumber<0&&this.state.toprev==1){
         this.props.getPrevPage();
       return ;
     }
-    
+    step!==0?this.props.getCurrentPage(pageNumber+1):false;
     if (this.props.isLoop) {
       pageNumber = pageCount == 0 ? pageNumber = 0 : ((pageNumber + pageCount) % pageCount);
     } else {
@@ -290,7 +296,7 @@ var ViewPager = React.createClass({
     }
   },
 
-  _getPage(pageIdx: number, loop:boolean = false ) {
+  _getPage(pageIdx, loop = false ) {
     var dataSource = this.props.dataSource;
     var pageID = dataSource.pageIdentities[pageIdx];
     return (

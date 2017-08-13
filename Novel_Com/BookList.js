@@ -8,16 +8,84 @@ import {
     Button,
     TouchableOpacity,
     StatusBar,
+    RefreshControl,
 } from 'react-native';
 
 import SideMenu from 'react-native-side-menu';
 import SplashScreen from 'react-native-splash-screen'
 import Icon from 'react-native-vector-icons/Foundation'
+import PullRefreshScrollView from 'react-native-pullrefresh-scrollview';
 
 import Menu from './menu'
+import getNet from '../util/getNet'
 
 var booklist;
 
+export default class BookPackage extends Component {
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: '古意流苏',
+            //左上角的返回键文字, 默认是上一个页面的title  IOS 有效
+            headerBackTitle: ' ',
+            //导航栏的style
+            headerStyle: {
+                backgroundColor: '#000'
+            },
+            headerRight: (
+                <Icon
+                    name="plus"
+                    size={20}
+                    color={'#fff'}
+                    onPress={() => { that._OpenMenu() }} //点击该按钮后触发的方法
+                    style={{
+                        marginRight: 10,
+                    }}
+                />
+            ),
+            headerTitleStyle: {
+                color: '#fff',
+                alignSelf: 'center'
+            }
+        };
+    };
+    constructor(props) {
+        super(props);
+        that = this;
+        this.state = {
+            load: true,
+            isOpen: false,
+           
+        };
+    }
+
+    _OpenMenu = () => {
+        this.setState({ isOpen: true })
+    }
+
+    updateMenuState(isOpen) {
+        console.log()
+        this.setState({
+            isOpen: isOpen,
+        })
+    }
+    render() {
+        const menu = <Menu />;
+        return (
+            (<View style={styles.container}>
+                <SideMenu menu={menu}
+                    isOpen={this.state.isOpen}
+                    onChange={isOpen => this.updateMenuState(isOpen)}
+                    menuPosition={'right'}
+                    disableGestures={true}
+                >
+                    <BookList navigation={this.props.navigation} />
+                </SideMenu>
+            </View>)
+        );
+    }
+}
+
+var RefreshCount = 0;
 class BookList extends Component {
     constructor(props) {
         super(props);
@@ -26,7 +94,7 @@ class BookList extends Component {
         });
         this.state = {
             dataSource: '',
-            load: true
+            load: true,
         };
         // DeviceStorage.clear('booklist');
         DeviceStorage.get('booklist').then(val => {
@@ -88,7 +156,11 @@ class BookList extends Component {
                 <View style={{
                     height: 38
                 }}>
-                    <Text style={styles.rowStyle}>{rowData.bookName}</Text>
+                <Text style={styles.rowStyle}>
+                    <Text >{rowData.bookName}</Text>
+                    <Text style={styles.latestChapter}>{`    ${rowData.latestChapter}`}</Text>
+                </Text>
+                    
                 </View>
             </TouchableOpacity>
         );
@@ -96,7 +168,24 @@ class BookList extends Component {
     _renderSeparator = () => {
         return (<View style={styles.solid} />);
     }
-
+    _onRefresh = (PullRefresh) =>{
+        getNet.refreshChapter(booklist,()=>{
+            RefreshCount++;
+            if(RefreshCount!=booklist.length) return;
+            this.setState({
+                dataSource:new ListView.DataSource({
+                    rowHasChanged: (r1, r2) => r1 !== r2
+                }).cloneWithRows(booklist)
+            },()=>{
+                RefreshCount = 0;
+                DeviceStorage.save('booklist', booklist);
+                PullRefresh.onRefreshEnd();
+            })
+        });
+        
+        
+    
+    }
     render() {
         return (
             this.state.load ? (false) :
@@ -106,6 +195,7 @@ class BookList extends Component {
                         style={{
                             flex: 1
                         }}
+                        renderScrollComponent={(props) => <PullRefreshScrollView onRefresh={(PullRefresh)=>this._onRefresh(PullRefresh)} {...props}     />}
                         dataSource={this.state.dataSource}
                         renderSeparator={this._renderSeparator}
                         renderRow={this._renderRow} />
@@ -114,83 +204,6 @@ class BookList extends Component {
     }
 }
 
-export default class BookPackage extends Component {
-    static navigationOptions = ({ navigation }) => {
-        return {
-            title: '古意流苏',
-            //左上角的返回键文字, 默认是上一个页面的title  IOS 有效
-            headerBackTitle: ' ',
-            //导航栏的style
-            headerStyle: {
-                backgroundColor: '#000'
-            },
-            headerRight: (
-                // <Button
-                //     title='gDwn'
-                //     onPress={() => {
-                //         that._FlatList.scrollToIndex({ viewPosition: 0.5, index: this.lengt });
-                //     }}
-                //     color='#fff'
-                // ></Button>
-                <Icon
-                    name="plus"
-                    size={20}
-                    color={'#fff'}
-                    onPress={()=>{that._OpenMenu()}} //点击该按钮后触发的方法
-                    style={{
-                        marginRight:10,
-                    }}
-                    />
-            ),
-            headerTitleStyle: {
-                color: '#fff',
-                alignSelf: 'center'
-            }
-        };
-    };
-    constructor(props) {
-        super(props);
-        that = this;
-        this.state = {
-            load: true,
-            isOpen: false,
-            selectedItem: 'About'
-        };
-    }
-
-    _OpenMenu = () =>{
-        this.setState({isOpen:true})
-    }
-
-    onMenuItemSelected = (item) => {
-        this.setState({
-            isOpen: false,
-            selectedItem: item,
-        });
-    }
-    updateMenuState(isOpen) {
-        console.log()
-        this.setState({
-            isOpen: isOpen,
-        })
-    }
-    render() {
-        const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
-        return (
-            // this.state.load ? (false) :
-            (<View style={styles.container}>
-                <SideMenu menu={menu}
-                    isOpen={this.state.isOpen}
-                    onChange={isOpen => this.updateMenuState(isOpen)}
-                    menuPosition={'right'}
-                    disableGestures={true}
-                >
-                    <BookList navigation={this.props.navigation} />
-                </SideMenu>
-            </View>)
-        );
-    }
-}
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -199,7 +212,12 @@ const styles = StyleSheet.create({
     },
     rowStyle: {
         marginTop: 12,
-        marginLeft: 20
+        marginLeft: 20,
+    },
+    latestChapter:{
+        paddingLeft: 20,
+        fontSize:12,
+        color:'#999999'
     },
     solid: {
         height: 1,
