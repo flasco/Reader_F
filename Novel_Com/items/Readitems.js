@@ -32,9 +32,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#acc7a7',
     },
     title:{
-        marginTop:5,
+        marginTop:8,
         color:'#576457',
-        paddingLeft:8,
+        paddingLeft:20,
     },
     bottom1:{
         flex:1,
@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
         textAlign:'justify',
         flex: 1,
         marginTop: 8,
-        marginLeft: 29,
-        fontSize: 21,
+        marginLeft: 20,
+        fontSize: 23,
         fontStyle: 'normal',
-        lineHeight: 38
+        lineHeight: 36
     },
 });

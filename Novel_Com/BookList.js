@@ -20,7 +20,7 @@ import PullRefreshScrollView from '../RefreshScollowView_Re/PullRefreshScrollVie
 import Menu from './menu';
 import getNet from '../util/getNet';
 
-var booklist;
+var booklist,tht;
 var swipeoutBtns = [
     {
         text: 'Button'
@@ -39,11 +39,11 @@ export default class BookPackage extends Component {
             headerRight: (
                 <Icon
                     name="plus"
-                    size={20}
+                    size={30}
                     color={'#fff'}
-                    onPress={() => { that._OpenMenu() }} //点击该按钮后触发的方法
+                    onPress={() => { tht._OpenMenu() }} //修复进入目录之后回点发生崩溃的问题
                     style={{
-                        marginRight: 10,
+                        marginRight: 15,
                     }}
                 />
             ),
@@ -55,11 +55,10 @@ export default class BookPackage extends Component {
     };
     constructor(props) {
         super(props);
-        that = this;
+        tht = this;
         this.state = {
             load: true,
             isOpen: false,
-
         };
     }
 
@@ -182,10 +181,10 @@ class BookList extends Component {
                         bookNum: booklist.indexOf(rowData),
                     })}>
                     <View style={{
-                        height: 38
+                        height: 52
                     }}>
                         <Text style={styles.rowStyle}>
-                            <Text >{rowData.bookName}</Text>
+                            <Text style={{fontSize:15,}}>{rowData.bookName}</Text>
                             <Text style={styles.latestChapter}>{`    ${rowData.latestChapter}`}</Text>
                         </Text>
 
@@ -237,7 +236,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF'
     },
     rowStyle: {
-        marginTop: 12,
+        marginTop: 18,
         marginLeft: 20,
     },
     latestChapter: {
