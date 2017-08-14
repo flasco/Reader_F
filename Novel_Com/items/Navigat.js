@@ -23,6 +23,7 @@ export default class Navigat extends Component {
                                         .navigate('ChaL',{
                                             url:this.props.urlx,
                                             name:this.props.bname,
+                                            chap:this.props.currentChapter,
                                             callback:(url)=>this.props.getChapterUrl(url)
                                         });
                                     }}/>

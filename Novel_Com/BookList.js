@@ -12,15 +12,20 @@ import {
 } from 'react-native';
 
 import SideMenu from 'react-native-side-menu';
-import SplashScreen from 'react-native-splash-screen'
-import Icon from 'react-native-vector-icons/Foundation'
-import PullRefreshScrollView from 'react-native-pullrefresh-scrollview';
+import SplashScreen from 'react-native-splash-screen';
+import Icon from 'react-native-vector-icons/Foundation';
+import Swipeout from 'react-native-swipeout'
 
-import Menu from './menu'
-import getNet from '../util/getNet'
+import PullRefreshScrollView from '../RefreshScollowView_Re/PullRefreshScrollView';
+import Menu from './menu';
+import getNet from '../util/getNet';
 
 var booklist;
-
+var swipeoutBtns = [
+    {
+        text: 'Button'
+    }
+]
 export default class BookPackage extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
@@ -54,7 +59,7 @@ export default class BookPackage extends Component {
         this.state = {
             load: true,
             isOpen: false,
-           
+
         };
     }
 
@@ -117,10 +122,10 @@ class BookList extends Component {
                         recordPage: 1,
                         plantformId: 5,
                     }, {
-                        bookName: '测试1号',
-                        author: '11',
-                        url: 'http://www.biqiuge.com/book/4912/',
-                        recordChapter: 'http://www.biqiuge.com/book/4912/3102895.html',
+                        bookName: '十夜书',
+                        author: '西小楼',
+                        url: 'http://www.qu.la/book/33301/',
+                        recordChapter: 'http://www.qu.la/book/33301//book/33301/1825139.html',
                         latestChapter: '待检测',
                         recordPage: 1,
                         plantformId: 5,
@@ -146,45 +151,66 @@ class BookList extends Component {
     componentDidMount() {
         SplashScreen.hide();
     }
-    _renderRow = (rowData) => {
+    ontest = (r)=>{
+        booklist.splice(r,1);
+        this.setState({
+            dataSource: new ListView.DataSource({
+                rowHasChanged: (r1, r2) => r1 !== r2
+            }).cloneWithRows(booklist)
+        },() => {
+            DeviceStorage.save('booklist', booklist);
+        })
+
+    }
+    _renderRow = (rowData,sectionID,rowID) => {
         const { navigate } = this.props.navigation;
         return (
-            <TouchableOpacity
-                onPress={() => navigate('Read', {
-                    bookNum: booklist.indexOf(rowData),
-                })}>
-                <View style={{
-                    height: 38
-                }}>
-                <Text style={styles.rowStyle}>
-                    <Text >{rowData.bookName}</Text>
-                    <Text style={styles.latestChapter}>{`    ${rowData.latestChapter}`}</Text>
-                </Text>
-                    
-                </View>
-            </TouchableOpacity>
+            <Swipeout right={
+                [{text: '删除',
+                  onPress:()=>{
+                    this.ontest(rowID)
+                  },
+                  backgroundColor:'red',
+                }]
+            }
+            autoClose={true}
+            sectionID={sectionID}
+            close={!(this.state.sectionID === sectionID && this.state.rowID === rowID)}
+            backgroundColor={'#F5FCFF'}>
+                <TouchableOpacity
+                    onPress={() => navigate('Read', {
+                        bookNum: booklist.indexOf(rowData),
+                    })}>
+                    <View style={{
+                        height: 38
+                    }}>
+                        <Text style={styles.rowStyle}>
+                            <Text >{rowData.bookName}</Text>
+                            <Text style={styles.latestChapter}>{`    ${rowData.latestChapter}`}</Text>
+                        </Text>
+
+                    </View>
+                </TouchableOpacity>
+            </Swipeout>
         );
     }
     _renderSeparator = () => {
         return (<View style={styles.solid} />);
     }
-    _onRefresh = (PullRefresh) =>{
-        getNet.refreshChapter(booklist,()=>{
+    _onRefresh = (PullRefresh) => {
+        getNet.refreshChapter(booklist, () => {
             RefreshCount++;
-            if(RefreshCount!=booklist.length) return;
+            if (RefreshCount != booklist.length) return;
             this.setState({
-                dataSource:new ListView.DataSource({
+                dataSource: new ListView.DataSource({
                     rowHasChanged: (r1, r2) => r1 !== r2
                 }).cloneWithRows(booklist)
-            },()=>{
+            }, () => {
                 RefreshCount = 0;
                 DeviceStorage.save('booklist', booklist);
                 PullRefresh.onRefreshEnd();
             })
         });
-        
-        
-    
     }
     render() {
         return (
@@ -195,7 +221,7 @@ class BookList extends Component {
                         style={{
                             flex: 1
                         }}
-                        renderScrollComponent={(props) => <PullRefreshScrollView onRefresh={(PullRefresh)=>this._onRefresh(PullRefresh)} {...props}     />}
+                        renderScrollComponent={(props) => <PullRefreshScrollView onRefresh={(PullRefresh) => this._onRefresh(PullRefresh)} {...props} />}
                         dataSource={this.state.dataSource}
                         renderSeparator={this._renderSeparator}
                         renderRow={this._renderRow} />
@@ -207,17 +233,17 @@ class BookList extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 5,
+        
         backgroundColor: '#F5FCFF'
     },
     rowStyle: {
         marginTop: 12,
         marginLeft: 20,
     },
-    latestChapter:{
+    latestChapter: {
         paddingLeft: 20,
-        fontSize:12,
-        color:'#999999'
+        fontSize: 12,
+        color: '#999999'
     },
     solid: {
         height: 1,

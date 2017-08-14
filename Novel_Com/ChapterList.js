@@ -35,7 +35,8 @@ export default class NovelList extends Component {
 
         this.state = {
             dataSource: '',
-            load: false
+            load: false,
+            currentCh:props.navigation.state.params.chap,
         };
     }
 
@@ -49,11 +50,24 @@ export default class NovelList extends Component {
             } else {
                 ChapterList = val;
             }
-            this.getNet(this.props.navigation.state.params.url);
+            this.getNet(this.props.navigation.state.params.url,()=>{
+                let chap = this.state.currentCh;
+                console.log(chap);
+                let inx = 0,iny = this.state.dataSource.length;
+                while(inx<iny){
+                    if(this.state.dataSource[inx].key === chap){
+                        break;
+                    }
+                    inx++;
+                }
+                setTimeout(()=>{
+                    that._FlatList.scrollToIndex({ viewPosition: 0.5, index: inx});
+                },100);
+            });
         })
 
     }
-    getNet = (nurl) => {
+    getNet = (nurl,callback) => {
         if (ChapterList.length === 0) {
             let url = 'http://testdb.leanapp.cn/Analy_x?action=1&url=' + nurl;
             fetch(url).then((Response) => Response.json()).then(responseData => {
@@ -73,6 +87,8 @@ export default class NovelList extends Component {
                 this.setState({
                     dataSource: n,
                     load: true
+                },()=>{
+                    callback();
                 });
             }).catch((Error) => {
                 console.warn(Error);
@@ -82,11 +98,14 @@ export default class NovelList extends Component {
             this.setState({
                 dataSource: ChapterList,
                 load: true
+            },()=>{
+                callback();
             });
         }
     }
 
     _renderItem = (item) => {
+        
         let txt = item.item.title;
         let url = item.item.key;
         return (
@@ -95,7 +114,7 @@ export default class NovelList extends Component {
                     this.props.navigation.state.params.callback(url);
                     this.props.navigation.goBack();
                 }}>
-                <Text style={styles.rowStyle}>{txt}</Text>
+                <Text style={[styles.rowStyle,this.state.currentCh===url?styles.red:false]}>{txt}</Text>
             </TouchableOpacity>
         );
     }
@@ -114,8 +133,9 @@ export default class NovelList extends Component {
     render() {
         if (this.state.load === true) {
             return (
-                <View>
+                <View style={{backgroundColor:'#D8D8D8'}}>
                     <FlatList
+                        initialNumToRender={20}
                         ref={(c) => this._FlatList = c}
                         data={this.state.dataSource}
                         renderItem={this._renderItem}
@@ -133,11 +153,6 @@ export default class NovelList extends Component {
     }
 }
 const styles = StyleSheet.create({
-    welcome: {
-        fontSize: 15,
-        textAlign: 'center',
-        margin: 10
-    },
     LatestChapter: {
         fontSize: 12,
         textAlign: 'center',
@@ -147,13 +162,17 @@ const styles = StyleSheet.create({
     },
     rowStyle: {
         marginTop: 12,
-        marginLeft: 15
+        marginLeft: 15,
+        color:'#565656'
     },
     solid: {
         height: 1,
-        backgroundColor: 'black',
+        backgroundColor: '#969696',
         marginLeft: 15,
         marginRight: 20
+    },
+    red:{
+        color:'#AF3E28'
     },
     gDwn: {
         color: '#fff'

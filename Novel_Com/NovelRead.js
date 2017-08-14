@@ -41,6 +41,7 @@ export default class NovelRead extends Component {
                 });
             }
             this.getNet(this.state.currentBook.recordChapter, 0);
+            booklist[this.state.currentNum].recordPage = 1;//修复进入章节后从目录进入新章节页数记录不正确的bug
         });
     }
 
@@ -121,6 +122,11 @@ export default class NovelRead extends Component {
         if (this.state.loadFlag === true) {
             return (
                 <View style={styles.container}>
+                    <StatusBar
+                        barStyle="light-content"
+                        hidden={true}
+                        animation={false}
+                    ></StatusBar>
                     <Text style={styles.centr}>Loading...</Text>
                 </View>
             );
@@ -137,6 +143,7 @@ export default class NovelRead extends Component {
                     {this.state.menuF ? (
                         <Navigat
                             urlx={this.state.currentBook.url}
+                            currentChapter={this.state.currentBook.recordChapter}
                             navigation={this.props.navigation}
                             bname={this.state.currentBook.bookName}
                             choose={1}
