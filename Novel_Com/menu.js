@@ -19,10 +19,11 @@ export default class Menu extends React.PureComponent {
     }
 
     render() {
+        const { navigate } = this.props.navigation;
         return (
             <View style={styles.menu}>
                 <Text style={styles.item} onPress={this.leanMore}>Learn More</Text>
-                <Text style={styles.item} onPress={this.Search}>Search</Text>
+                <Text style={styles.item} onPress={() => navigate('Sear')}>Search</Text>
             </View>
         );
     }

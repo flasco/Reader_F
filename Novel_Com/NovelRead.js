@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Text, View, Dimensions, StatusBar } from 'react-native';
 
+import Toast, {DURATION} from 'react-native-easy-toast' 
+
 import ViewPager from '../viewPager_Re/ViewPager';
 import getContextArr from '../util/getContextArr';
 import Readeitems from './items/Readitems';
@@ -88,13 +90,19 @@ export default class NovelRead extends Component {
             tht.setState({ loadFlag: true }, () => {
                 tht.getNet(tht.state.test.next, 1)
             });
+        }else{
+            this.refs.toast.show('已经是最后一章。');
+            return -1;
         }
+        return 0;
     }
     _getPrevPage = () => {
         if (tht.state.test.prev.indexOf('.html') !== -1) {//防止翻页越界
             tht.setState({ loadFlag: true }, () => {
                 tht.getNet(tht.state.test.prev, -1);
             });
+        }else{
+            this.refs.toast.show('已经是第一章。');
         }
     }
     _clickBoard = () => {
@@ -165,7 +173,7 @@ export default class NovelRead extends Component {
                         autoPlay={false}
                         renderPageIndicator={false}
                         Gpag={this.state.Gpag} />
-
+                    <Toast ref="toast"/>
                     {this.state.menuF ? (
                         <Navigat
                             navigation={this.props.navigation}

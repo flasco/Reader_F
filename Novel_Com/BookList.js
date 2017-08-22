@@ -73,7 +73,7 @@ export default class BookPackage extends Component {
         })
     }
     render() {
-        const menu = <Menu />;
+        const menu = <Menu navigation={this.props.navigation}/>;
         return (
             (<View style={styles.container}>
                 <SideMenu menu={menu}

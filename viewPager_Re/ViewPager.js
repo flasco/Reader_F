@@ -219,7 +219,7 @@ var ViewPager = React.createClass({
     
     var pageCount = this.maxP;
     // if(pageNumber>pageCount) pageNumber = pageCount - 1;
-    console.log('pageNumber:'+pageNumber+'    pageCount:'+pageCount);
+    // console.log('pageNumber:'+pageNumber+'    pageCount:'+pageCount);
     if (pageNumber < 0 || pageNumber > pageCount) {
       console.error('Invalid page number: ', pageNumber);
       return
@@ -237,9 +237,13 @@ var ViewPager = React.createClass({
 
     //私人修改
     if(pageNumber>=pageCount&&this.state.toprev==0){
+      let tmpag = pageNumber;
       pageNumber = 0;
+      if(this.props.getNextPage()===-1){
+        pageNumber = tmpag-1;
+      }
       this.props.getCurrentPage(pageNumber+1);
-      this.props.getNextPage();
+      console.log(pageNumber)
       return;
     }else if(pageNumber<0&&this.state.toprev==1){
         this.props.getPrevPage();
