@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
         flex: 1,
         marginTop: 8,
         marginLeft: 20,
-        fontSize: 23,
+        fontSize: 24,
         fontStyle: 'normal',
-        lineHeight: 36
+        lineHeight: 37
     },
 });

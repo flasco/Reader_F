@@ -42,9 +42,27 @@ export default class NovelRead extends Component {
                     chapterMap: val,
                 });
             }
-            this.getNet(this.state.currentBook.recordChapter, 0);
-            booklist[this.state.currentNum].recordPage = 1;//修复进入章节后从目录进入新章节页数记录不正确的bug
-        });
+        }).then(()=>{
+            console.log(this.state.currentBook.recordChapter)
+            if(this.state.currentBook.recordChapter===''){
+                DeviceStorage.get(this.state.currentBook.bookName + '_list').then(val=>{
+                    if(val===null){//没有获取章节列表的情况
+                        this.refs.toast.show('请获取一遍章节列表再重新进入。');
+                    }else{
+                        this.state.currentBook.recordChapter = val[val.length-1].key;
+                        console.log(val[val.length-1].key);
+                    }
+                    console.log(val);
+                }).then(()=>{
+                    this.getNet(this.state.currentBook.recordChapter, 0);
+                    booklist[this.state.currentNum].recordPage = 1;//修复进入章节后从目录进入新章节页数记录不正确的bug
+                })
+            }else{
+                this.getNet(this.state.currentBook.recordChapter, 0);
+                booklist[this.state.currentNum].recordPage = 1;//修复进入章节后从目录进入新章节页数记录不正确的bug
+            }
+            
+        })
     }
 
     _renderPage = (data, pageID) => {
@@ -119,7 +137,7 @@ export default class NovelRead extends Component {
         });
     }
     _getCurrentPage = pag => {
-        console.log(pag)
+        // console.log(pag)
         pag = pag === 0 ? 1 : pag;
         booklist[this.state.currentNum].recordPage = pag;
         DeviceStorage.save('booklist', booklist);

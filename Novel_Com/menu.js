@@ -5,10 +5,10 @@ const window = Dimensions.get('window');
 
 export default class Menu extends React.PureComponent {
     leanMore=()=>{
-        const sturl = 'http://testdb.leanapp.cn/start?h=2';//运转2小时
+        const sturl = 'http://testdb.leanapp.cn/start?h=6';//运转6小时
         fetch(sturl).then(res => {
             console.log(res);
-            alert('Study at 2 hours');
+            alert('Study at 6 hours');
         }).catch((Error) => {
             console.warn(Error);
         }).done();
@@ -22,8 +22,9 @@ export default class Menu extends React.PureComponent {
         const { navigate } = this.props.navigation;
         return (
             <View style={styles.menu}>
+                <Text style={styles.item} onPress={() => navigate('Sear',{addBook:this.props.addBook})}>Search</Text>
                 <Text style={styles.item} onPress={this.leanMore}>Learn More</Text>
-                <Text style={styles.item} onPress={() => navigate('Sear')}>Search</Text>
+                <Text style={styles.item} onPress={()=>{alert('Still wait to add.')}}>CleanAllData</Text>
             </View>
         );
     }

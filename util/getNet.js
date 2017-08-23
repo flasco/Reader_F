@@ -12,6 +12,15 @@ export default class getNet {
         }
     }
 
+    static refreshSingleChapter(book){
+        let bookChapterLst = book.bookName + '_list';
+        let latech = book.latestChapter;
+        let url = 'http://testdb.leanapp.cn/Analy_x?action=1&url=' + book.url;
+        this.get(url,bookChapterLst,latech,(latechap)=>{
+            book.latestChapter = latechap;
+        });
+    }
+
     static get(url,bookChapterLst,latech,callback){
         fetch(url).then((Response) => Response.json()).then(responseData => {
             let data = responseData.reverse();

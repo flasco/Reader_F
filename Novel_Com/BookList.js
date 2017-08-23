@@ -20,7 +20,7 @@ import PullRefreshScrollView from '../RefreshScollowView_Re/PullRefreshScrollVie
 import Menu from './menu';
 import getNet from '../util/getNet';
 
-var booklist,tht;
+var booklist,tht,tha;
 var swipeoutBtns = [
     {
         text: 'Button'
@@ -72,8 +72,33 @@ export default class BookPackage extends Component {
             isOpen: isOpen,
         })
     }
+
+    _addBook = (data) => {
+        console.log(data);
+        let book = {
+            bookName: data.name,
+            author: data.author,
+            url: data.url,
+            recordChapter: '',
+            latestChapter: '待检测',
+            recordPage: 1,
+            plantformId: data.plantFormId,
+        };
+        booklist.push(book);
+        getNet.refreshSingleChapter(book);
+        tha.setState({
+                    dataSource: new ListView.DataSource({
+                        rowHasChanged: (r1, r2) => r1 !== r2
+                    }).cloneWithRows(booklist),
+        });
+        DeviceStorage.save('booklist', booklist);
+    }
+
     render() {
-        const menu = <Menu navigation={this.props.navigation}/>;
+        const menu = <Menu 
+                        navigation={this.props.navigation}
+                        addBook={this._addBook}
+                     />;
         return (
             (<View style={styles.container}>
                 <SideMenu menu={menu}
@@ -96,6 +121,7 @@ class BookList extends Component {
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
+        tha = this;
         this.state = {
             dataSource: '',
             load: true,
@@ -150,6 +176,7 @@ class BookList extends Component {
     componentDidMount() {
         SplashScreen.hide();
     }
+
     ontest = (r)=>{
         booklist.splice(r,1);
         this.setState({
@@ -232,7 +259,6 @@ class BookList extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        
         backgroundColor: '#F5FCFF'
     },
     rowStyle: {
