@@ -37,7 +37,7 @@ export default class DeviceStorage {
     }
 
     static cleanAll(){
-        return AsyncStorage.clear().then(val=>console.log(val));
+        return AsyncStorage.clear();
     }
 
 }

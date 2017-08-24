@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AppRegistry, StyleSheet, Text, View,Dimensions,Button} from 'react-native';
+import { StyleSheet, Text, View,Dimensions,Button} from 'react-native';
 
 
 var {height, width} = Dimensions.get('window');
@@ -42,9 +42,13 @@ export default class Navigat extends Component {
                     <View style={{flex:1,paddingTop:10}}>
                         <Button title="夜间模式" 
                         color="#fff"
+                                onPress={()=>{this.props.SModeChange();}}/>
+                    </View>
+                    <View style={{flex:2,paddingTop:10}}>
+                    <Button title="缓存" 
+                                color="#fff"
                                 onPress={()=>{this.props.navigation.goBack();}}/>
                     </View>
-                    <View style={{flex:2}}></View>
                     <View style={{flex:1,paddingTop:10}}>
                         <Button title="设置" 
                                 color="#fff"

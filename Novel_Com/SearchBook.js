@@ -1,14 +1,23 @@
-import { StyleSheet, Text, View, ListView, Button, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, ListView, TextInput, TouchableOpacity, Alert } from 'react-native';
 import React, { Component } from 'react';
 
 import Toast, { DURATION } from 'react-native-easy-toast'
-
+var UrlId = [
+    '23us',
+    'qidian',
+    'xs.la',
+    'luoqiu',
+    'biqiuge',
+    'kanshuz',
+    'qu.la',
+]
 export default class SearchBook extends Component {
     constructor(props) {
         super(props);
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
+        
         this.state = {
             text: '',
             dataSource: '',
@@ -74,7 +83,7 @@ export default class SearchBook extends Component {
                     height: 52
                 }}>
                     <Text style={styles.rowStyle}>
-                        {`${rowData.name} - ${rowData.author}   ${rowData.plantFormId}`}
+                        {`${rowData.name} - ${rowData.author}   ${UrlId[rowData.plantFormId-1]}`}
                     </Text>
                 </View>
             </TouchableOpacity>

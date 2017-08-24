@@ -1,21 +1,20 @@
 import React, {Component} from 'react';
-import {AppRegistry, StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 
 import dateFormat from 'dateformat';
 
 export default class Readitems extends Component {
-    shouldComponentUpdate(){
-        return false;
-    }
-    
+    // shouldComponentUpdate(){
+    //     return false;
+    // }
     render(){
         return (
-            <View style={styles.container}>
-                <Text style={styles.title}>{this.props.title}</Text>
-                <Text style={styles.textsize} numberOfLines={21}>{this.props.data}</Text>
+            <View style={[styles.container,this.props.SMode?(styles.SunnyMode_container):(styles.MoonMode_container)]}>
+                <Text style={[styles.title,this.props.SMode?(styles.SunnyMode_Title):(styles.MoonMode_Title)]}>{this.props.title}</Text>
+                <Text style={[styles.textsize,this.props.SMode?(styles.SunnyMode_text):(styles.MoonMode_text)]} numberOfLines={21}>{this.props.data}</Text>
                 <View style={styles.bottView}>
-                    <Text style={styles.bottom1}>{dateFormat(new Date(), 'H:MM')}</Text>
-                    <Text style={styles.bottom2} >{this.props.presPag}/{this.props.totalPage} </Text>
+                    <Text style={[styles.bottom1,this.props.SMode?(false):(styles.MoonMode_Bottom)]}>{dateFormat(new Date(), 'H:MM')}</Text>
+                    <Text style={[styles.bottom2,this.props.SMode?(false):(styles.MoonMode_Bottom)]} >{this.props.presPag}/{this.props.totalPage} </Text>
                 </View>
             </View>
         );
@@ -23,17 +22,32 @@ export default class Readitems extends Component {
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
+    SunnyMode_container:{
         backgroundColor: '#acc7a7',
     },
-    container1:{
+    SunnyMode_Title:{
+        color:'#576457',
+    },
+    SunnyMode_text:{
+        color:'#0d2a0f',
+    },
+    MoonMode_container:{
+        backgroundColor: '#0F0F0F',
+    },
+    MoonMode_Title:{
+        color:'#474747',
+    },
+    MoonMode_text:{
+        color:'#595959',
+    },
+    MoonMode_Bottom:{
+        color:'#424242',
+    },
+    container:{
         flex:1,
-        backgroundColor: '#acc7a7',
     },
     title:{
         marginTop:8,
-        color:'#576457',
         paddingLeft:20,
     },
     bottom1:{
@@ -51,12 +65,11 @@ const styles = StyleSheet.create({
         marginBottom:21,
     },
     textsize: {
-        color:'#0d2a0f',
         textAlign:'justify',
         flex: 1,
         marginTop: 8,
-        marginLeft: 20,
-        fontSize: 24,
+        marginLeft: 22,
+        fontSize: 23,
         fontStyle: 'normal',
         lineHeight: 37
     },

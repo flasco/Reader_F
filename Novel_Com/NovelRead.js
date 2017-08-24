@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppRegistry, StyleSheet, Text, View, Dimensions, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, StatusBar } from 'react-native';
 
 import Toast, {DURATION} from 'react-native-easy-toast' 
 
@@ -24,7 +24,13 @@ export default class NovelRead extends Component {
             menuF: false, //判断导航栏是否应该隐藏
             Gpag: 0, //判断是前往上一章（-1）还是下一章（1）
             chapterMap: new Map(),
+            SMode:true,
         };
+        DeviceStorage.get('SMode').then(val=>{
+            if(val!==null){
+                this.setState({SMode:val});
+            }
+        });
         bookPlant = this.state.currentBook.bookName + '_'
             + this.state.currentBook.plantformId;
         // DeviceStorage.clear(bookPlant);
@@ -69,6 +75,7 @@ export default class NovelRead extends Component {
         return (
             <Readeitems
                 title={this.state.test.title}
+                SMode={this.state.SMode}
                 data={data}
                 presPag={Number(pageID) + 1}
                 totalPage={totalPage}
@@ -76,13 +83,37 @@ export default class NovelRead extends Component {
         );
     }
 
+     _fetch(fetch_promise, timeout) {
+        var abort_fn = null;
+  
+        //这是一个可以被reject的promise
+        var abort_promise = new Promise(function(resolve, reject) {
+               abort_fn = function() {
+                  reject('abort promise');
+               };
+        });
+  
+        //这里使用Promise.race，以最快 resolve 或 reject 的结果来传入后续绑定的回调
+         var abortable_promise = Promise.race([
+               fetch_promise,
+               abort_promise
+         ]);
+  
+         setTimeout(function() {
+               abort_fn();
+          }, timeout);
+  
+         return abortable_promise;
+  }
+
     getNet = (nurl, direct) => {
         booklist[this.state.currentNum].recordChapter = nurl;
         DeviceStorage.save('booklist', booklist);
         if (this.state.chapterMap[nurl] === undefined) {
-            console.log('fetch...')
+            // console.log('fetch...')
             let url = 'http://testdb.leanapp.cn/Analy_x?action=2&url=' + nurl;//this.state.test.next
-            fetch(url).then((Response) => Response.json()).then(responseData => {
+
+            this._fetch(fetch(url), 5000).then((Response) => Response.json()).then(responseData => {
                 this.setState({
                     test: responseData,
                     loadFlag: false,
@@ -92,7 +123,13 @@ export default class NovelRead extends Component {
                     DeviceStorage.save(bookPlant, this.state.chapterMap);
                 });
             }).catch((Error) => {
-                console.warn(Error);
+                let epp = {title:"网络连接超时",content:"网络连接超时.",prev:"error",next:"error"}
+                this.setState({
+                    test: epp,
+                    loadFlag: false,
+                    Gpag: direct,
+                });
+                //  console.warn(Error);
             }).done();
         } else {
             this.setState({
@@ -127,6 +164,16 @@ export default class NovelRead extends Component {
         let flag = this.state.menuF;
         this.setState({ menuF: !flag });
     }
+
+    _SMode_Change = () => {
+        console.log('_Smode.change');
+
+        let s = tht.state.SMode;
+
+        tht.setState({SMode:!s},()=>{
+            DeviceStorage.save('SMode',!s);
+        });
+    }
     _getChapterUrl = (urln) => {
         let url = urln;
         this.setState({
@@ -147,18 +194,18 @@ export default class NovelRead extends Component {
         
         if (this.state.loadFlag === true) {
             return (
-                <View style={styles.container}>
+                <View style={[styles.container,this.state.SMode?(styles.SunnyMode_container):(styles.MoonMode_container)]}>
                     <StatusBar
                         barStyle="light-content"
                         hidden={true}
                         animation={false}
                     ></StatusBar>
-                    <Text style={styles.centr}>Loading...</Text>
+                    <Text style={[styles.centr,this.state.SMode?(false):(styles.MoonMode_text)]}>Loading...</Text>
                 </View>
             );
         } else {
             return (
-                <View style={styles.container}>
+                <View style={[styles.container,this.state.SMode?(styles.SunnyMode_container):(styles.MoonMode_container)]}>
 
                     <StatusBar
                         barStyle="light-content"
@@ -195,6 +242,7 @@ export default class NovelRead extends Component {
                     {this.state.menuF ? (
                         <Navigat
                             navigation={this.props.navigation}
+                            SModeChange={this._SMode_Change}
                             choose={2}
                         />
                     ) : (false)}
@@ -208,10 +256,26 @@ const styles = StyleSheet.create({
     centr: {
         marginTop: 35,
         textAlign: 'center',
+        fontSize:18,
+    },
+    SunnyMode_container:{
+        backgroundColor: '#acc7a7',
+    },
+    MoonMode_container:{
+        backgroundColor: '#0F0F0F',
+    },
+    MoonMode_text:{
+        color:'#595959',
     },
     container: {
         flex: 1,
-        backgroundColor: '#acc7a7',
     },
+
+    cancel:{
+        height:36,
+        fontSize:18,
+        textAlign:'center',
+        marginTop:7,
+    }
 
 });

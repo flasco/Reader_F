@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import {
-    AppRegistry,
     StyleSheet,
     Text,
     View,
     ListView,
-    Button,
     TouchableOpacity,
     StatusBar,
     RefreshControl,
@@ -15,6 +13,7 @@ import SideMenu from 'react-native-side-menu';
 import SplashScreen from 'react-native-splash-screen';
 import Icon from 'react-native-vector-icons/Foundation';
 import Swipeout from 'react-native-swipeout'
+
 
 import PullRefreshScrollView from '../RefreshScollowView_Re/PullRefreshScrollView';
 import Menu from './menu';
@@ -67,7 +66,6 @@ export default class BookPackage extends Component {
     }
 
     updateMenuState(isOpen) {
-        console.log()
         this.setState({
             isOpen: isOpen,
         })
