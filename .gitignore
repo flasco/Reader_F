@@ -55,3 +55,4 @@ Target.md
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
+util/fetch_Timeout.js

@@ -1,76 +1,85 @@
-import React, {Component} from 'react';
-import { StyleSheet, Text, View,Dimensions,Button} from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View, Dimensions, Button } from 'react-native';
 
 
-var {height, width} = Dimensions.get('window');
+var { height, width } = Dimensions.get('window');
 /**
  * 这个是自定义的StackNavigator导航栏
  * 用在了NovelRead.js中
  */
+
+
 export default class Navigat extends Component {
-    shouldComponentUpdate(){
-        return false;//设置成静态组件，不用实时render
+    _dia = 1;
+    constructor(props) {
+        super(props);
+        that = this;
     }
-    render(){
-        if(this.props.choose===1){
-            return(
-                <View style = {styles.Navig}>
-                        <View style={{flex:1,paddingTop:25}}>
-                            <Button title="目录" 
+
+    DoCache = () => {
+        this.props.showAlertSelected();
+    }
+
+    render() {
+        if (this.props.choose === 1) {
+            return (
+                <View style={styles.Navig}>
+                    <View style={{ flex: 1, paddingTop: 25 }}>
+                        <Button title="目录"
                             color="#fff"
-                                    onPress={()=>{
-                                        this.props.navigation
-                                        .navigate('ChaL',{
-                                            url:this.props.urlx,
-                                            name:this.props.bname,
-                                            chap:this.props.currentChapter,
-                                            callback:(url)=>this.props.getChapterUrl(url)
-                                        });
-                                    }}/>
-                        </View>
-                        <View style={{flex:2}}></View>
-                        <View style={{flex:1,paddingTop:25}}>
-                            <Button title="返回" 
-                                    color="#fff"
-                                    onPress={()=>{this.props.navigation.goBack();}}/>
-                        </View>
+                            onPress={() => {
+                                this.props.navigation
+                                    .navigate('ChaL', {
+                                        url: this.props.urlx,
+                                        name: this.props.bname,
+                                        chap: this.props.currentChapter,
+                                        callback: (url) => this.props.getChapterUrl(url)
+                                    });
+                            }} />
                     </View>
-            );
-        }else if(this.props.choose===2){
-            return(
-                <View style = {styles.Fotter}>
-                    <View style={{flex:1,paddingTop:10}}>
-                        <Button title="夜间模式" 
-                        color="#fff"
-                                onPress={()=>{this.props.SModeChange();}}/>
-                    </View>
-                    <View style={{flex:2,paddingTop:10}}>
-                    <Button title="缓存" 
-                                color="#fff"
-                                onPress={()=>{this.props.navigation.goBack();}}/>
-                    </View>
-                    <View style={{flex:1,paddingTop:10}}>
-                        <Button title="设置" 
-                                color="#fff"
-                                onPress={()=>{this.props.navigation.goBack();}}/>
+                    <View style={{ flex: 2 }}></View>
+                    <View style={{ flex: 1, paddingTop: 25 }}>
+                        <Button title="返回"
+                            color="#fff"
+                            onPress={() => { this.props.navigation.goBack(); }} />
                     </View>
                 </View>
             );
-        }else if(this.props.choose===3){
-            return(
-                <View style = {styles.ChapterNav}>
-                    <View style={{flex:1,paddingTop:25}}>
-                            <Button title="返回" 
-                                    color="#fff"
-                                    onPress={()=>{this.props.navigation.goBack();}}/>
+        } else if (this.props.choose === 2) {
+            return (
+                <View style={styles.Fotter}>
+                        <View style={{ flex: 1, paddingTop: 10 }}>
+                            <Button title="夜间模式"
+                                color="#fff"
+                                onPress={() => { this.props.SModeChange(); }} />
                         </View>
-                        <View style={{flex:2}}></View>
-                        <View style={{flex:1,paddingTop:25}}>
-                            <Button title="到底部" 
-                                    color="#fff"
-                                    onPress={this.props.goDown}
-                                    />
+                        <View style={{ flex: 2, paddingTop: 10 }}>
+                            <Button title="缓存"
+                                color="#fff"
+                                onPress={() => { this.DoCache() }} />
                         </View>
+                        <View style={{ flex: 1, paddingTop: 10 }}>
+                            <Button title="设置"
+                                color="#fff"
+                                onPress={() => { this.props.navigation.goBack(); }} />
+                        </View>
+                </View>
+            );
+        } else if (this.props.choose === 3) {
+            return (
+                <View style={styles.ChapterNav}>
+                    <View style={{ flex: 1, paddingTop: 25 }}>
+                        <Button title="返回"
+                            color="#fff"
+                            onPress={() => { this.props.navigation.goBack(); }} />
+                    </View>
+                    <View style={{ flex: 2 }}></View>
+                    <View style={{ flex: 1, paddingTop: 25 }}>
+                        <Button title="到底部"
+                            color="#fff"
+                            onPress={this.props.goDown}
+                        />
+                    </View>
                 </View>
             );
         }
@@ -78,29 +87,29 @@ export default class Navigat extends Component {
 }
 
 const styles = StyleSheet.create({
-    Navig:{
-        height:64,
-        backgroundColor:'#000',
-        zIndex:222,
+    Navig: {
+        height: 64,
+        backgroundColor: '#000',
+        zIndex: 2,
         width: width,
-        position:'absolute',
-        top:0,
-        flexDirection:'row'
+        position: 'absolute',
+        top: 0,
+        flexDirection: 'row'
     },
-    ChapterNav:{
-        height:64,
-        backgroundColor:'#000',
+    ChapterNav: {
+        height: 64,
+        backgroundColor: '#000',
         width: width,
-        flexDirection:'row'
+        flexDirection: 'row'
     },
-    Fotter:{
-        height:50,
-        backgroundColor:'#000',
-        zIndex:222,
+    Fotter: {
+        height: 50,
+        backgroundColor: '#000',
+        zIndex: 2,
         width: width,
-        position:'absolute',
-        bottom:0,
-        left:0,
-        flexDirection:'row'
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        flexDirection: 'row'
     },
 });

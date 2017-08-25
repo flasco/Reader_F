@@ -42,6 +42,7 @@ export default class NovelList extends Component {
 
     componentDidMount() {
         booklist = this.props.navigation.state.params.name + '_list';
+        console.log(booklist);
         DeviceStorage.get(booklist).then((val) => {
             if (val === null) {
                 console.log('检测书籍本地目录为空');
