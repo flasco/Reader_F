@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions, StatusBar } from 'react-native';
 
-import Toast, { DURATION } from 'react-native-easy-toast'
+import Toast from 'react-native-easy-toast';
 
 import ViewPager from '../viewPager_Re/ViewPager';
 import DialogSelected from '../util/popMenu';
@@ -26,7 +26,7 @@ q.drain = function () {
 
 function fetchList(nurl, callback) {
     let n = 100 * (finishTask / allTask) >> 0; //取整
-    if (n % 1 === 0) {
+    if (n % 2 === 0) {
         tht.setState({hintText:`Task process:${n}%`});
     }
     if (tht.state.chapterMap[nurl] !== undefined) {
@@ -49,7 +49,8 @@ function fetchList(nurl, callback) {
 var allTask = 0, finishTask = 0;
 
 var tht, bookPlant, booklist;
-var { height, width } = Dimensions.get('window');
+
+const { height, width } = Dimensions.get('window');
 
 export default class NovelRead extends Component {
     _dia;
@@ -254,7 +255,6 @@ export default class NovelRead extends Component {
         });
     }
     _getCurrentPage = pag => {
-        // console.log(pag)
         pag = pag === 0 ? 1 : pag;
         booklist[this.state.currentNum].recordPage = pag;
         DeviceStorage.save('booklist', booklist);
@@ -272,12 +272,9 @@ export default class NovelRead extends Component {
 
                 {this.state.menuF ? (
                     <Navigat
-                        urlx={this.state.currentBook.url}
-                        currentChapter={this.state.currentBook.recordChapter}
                         navigation={this.props.navigation}
-                        bname={this.state.currentBook.bookName}
                         choose={1}
-                        getChapterUrl={this._getChapterUrl}
+                        
                     />
                 ) : (false)}
 
@@ -302,6 +299,10 @@ export default class NovelRead extends Component {
                 <DialogSelected ref={(c) => this._dia = c} />
                 {this.state.menuF ? (
                     <Navigat
+                        urlx={this.state.currentBook.url}
+                        currentChapter={this.state.currentBook.recordChapter}
+                        bname={this.state.currentBook.bookName}
+                        getChapterUrl={this._getChapterUrl}
                         navigation={this.props.navigation}
                         showAlertSelected={this.showAlertSelected}
                         SModeChange={this._SMode_Change}

@@ -6,7 +6,6 @@ import {
     ListView,
     TouchableOpacity,
     StatusBar,
-    RefreshControl,
 } from 'react-native';
 
 import SideMenu from 'react-native-side-menu';
@@ -19,12 +18,8 @@ import PullRefreshScrollView from '../RefreshScollowView_Re/PullRefreshScrollVie
 import Menu from './menu';
 import getNet from '../util/getNet';
 
-var booklist,tht,tha;
-var swipeoutBtns = [
-    {
-        text: 'Button'
-    }
-]
+var booklist, tht, tha;
+
 export default class BookPackage extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
@@ -38,15 +33,14 @@ export default class BookPackage extends Component {
             headerRight: (
                 <TouchableOpacity onPress={() => { tht._OpenMenu() }}>
                     <Icon
-                    name="plus"
-                    size={30}
-                    color={'#fff'}
-                    style={{
-                        marginRight: 15,
-                    }}
-                />
+                        name="plus"
+                        size={30}
+                        color={'#fff'}
+                        style={{
+                            marginRight: 15,
+                        }}
+                    />
                 </TouchableOpacity>
-                
             ),
             headerTitleStyle: {
                 color: '#fff',
@@ -87,26 +81,25 @@ export default class BookPackage extends Component {
         booklist.push(book);
         getNet.refreshSingleChapter(book);
         tha.setState({
-                    dataSource: new ListView.DataSource({
-                        rowHasChanged: (r1, r2) => r1 !== r2
-                    }).cloneWithRows(booklist),
+            dataSource: new ListView.DataSource({
+                rowHasChanged: (r1, r2) => r1 !== r2
+            }).cloneWithRows(booklist),
         });
         DeviceStorage.save('booklist', booklist);
     }
 
     render() {
-        const menu = <Menu 
-                        navigation={this.props.navigation}
-                        addBook={this._addBook}
-                     />;
+        const menu = <Menu
+            navigation={this.props.navigation}
+            addBook={this._addBook}
+        />;
         return (
             (<View style={styles.container}>
                 <SideMenu menu={menu}
                     isOpen={this.state.isOpen}
                     onChange={isOpen => this.updateMenuState(isOpen)}
                     menuPosition={'right'}
-                    disableGestures={true}
-                >
+                    disableGestures={true}>
                     <BookList navigation={this.props.navigation} />
                 </SideMenu>
             </View>)
@@ -126,7 +119,6 @@ class BookList extends Component {
             dataSource: '',
             load: true,
         };
-        // DeviceStorage.clear('booklist');
         DeviceStorage.get('booklist').then(val => {
             if (val === null) {
                 booklist = [
@@ -143,14 +135,6 @@ class BookList extends Component {
                         author: '如倾如诉',
                         url: 'http://www.biqiuge.com/book/4912/',
                         recordChapter: 'http://www.biqiuge.com/book/4912/3102895.html',
-                        latestChapter: '待检测',
-                        recordPage: 1,
-                        plantformId: 5,
-                    }, {
-                        bookName: '十夜书',
-                        author: '西小楼',
-                        url: 'http://www.qu.la/book/33301/',
-                        recordChapter: 'http://www.qu.la/book/33301//book/33301/1825139.html',
                         latestChapter: '待检测',
                         recordPage: 1,
                         plantformId: 5,
@@ -177,32 +161,33 @@ class BookList extends Component {
         SplashScreen.hide();
     }
 
-    ontest = (r)=>{
-        booklist.splice(r,1);
+    ontest = (r) => {
+        booklist.splice(r, 1);
         this.setState({
             dataSource: new ListView.DataSource({
                 rowHasChanged: (r1, r2) => r1 !== r2
             }).cloneWithRows(booklist)
-        },() => {
+        }, () => {
             DeviceStorage.save('booklist', booklist);
         })
 
     }
-    _renderRow = (rowData,sectionID,rowID) => {
+    _renderRow = (rowData, sectionID, rowID) => {
         const { navigate } = this.props.navigation;
         return (
             <Swipeout right={
-                [{text: '删除',
-                  onPress:()=>{
-                    this.ontest(rowID)
-                  },
-                  backgroundColor:'red',
+                [{
+                    text: '删除',
+                    onPress: () => {
+                        this.ontest(rowID)
+                    },
+                    backgroundColor: 'red',
                 }]
             }
-            autoClose={true}
-            sectionID={sectionID}
-            close={!(this.state.sectionID === sectionID && this.state.rowID === rowID)}
-            backgroundColor={'#F5FCFF'}>
+                autoClose={true}
+                sectionID={sectionID}
+                close={!(this.state.sectionID === sectionID && this.state.rowID === rowID)}
+                backgroundColor={'#F5FCFF'}>
                 <TouchableOpacity
                     onPress={() => navigate('Read', {
                         bookNum: booklist.indexOf(rowData),
@@ -211,7 +196,7 @@ class BookList extends Component {
                         height: 52
                     }}>
                         <Text style={styles.rowStyle}>
-                            <Text style={{fontSize:15,}}>{rowData.bookName}</Text>
+                            <Text style={{ fontSize: 15, }}>{rowData.bookName}</Text>
                             <Text style={styles.latestChapter}>{`    ${rowData.latestChapter}`}</Text>
                         </Text>
 

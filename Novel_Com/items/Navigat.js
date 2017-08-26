@@ -1,23 +1,36 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Dimensions, Button } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
 
+import Icon from 'react-native-vector-icons/Foundation';
 
-var { height, width } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
+
 /**
  * 这个是自定义的StackNavigator导航栏
  * 用在了NovelRead.js中
  */
 
-
 export default class Navigat extends Component {
-    _dia = 1;
     constructor(props) {
         super(props);
         that = this;
     }
 
+    shouldComponentUpdate() {
+        return false;
+    }
+
     DoCache = () => {
         this.props.showAlertSelected();
+    }
+    JmptoChapterList = () => {
+        this.props.navigation
+            .navigate('ChaL', {
+                url: this.props.urlx,
+                name: this.props.bname,
+                chap: this.props.currentChapter,
+                callback: (url) => this.props.getChapterUrl(url)
+            });
     }
 
     render() {
@@ -25,61 +38,54 @@ export default class Navigat extends Component {
             return (
                 <View style={styles.Navig}>
                     <View style={{ flex: 1, paddingTop: 25 }}>
-                        <Button title="目录"
-                            color="#fff"
-                            onPress={() => {
-                                this.props.navigation
-                                    .navigate('ChaL', {
-                                        url: this.props.urlx,
-                                        name: this.props.bname,
-                                        chap: this.props.currentChapter,
-                                        callback: (url) => this.props.getChapterUrl(url)
-                                    });
-                            }} />
+                        <TouchableOpacity style={{ height: 40 }} onPress={() => { alert('coming soon...') }}>
+                            <Text style={styles.Topper}>换源</Text>
+                        </TouchableOpacity>
                     </View>
-                    <View style={{ flex: 2 }}></View>
+                    <View style={{ flex: 3 }}></View>
                     <View style={{ flex: 1, paddingTop: 25 }}>
-                        <Button title="返回"
-                            color="#fff"
-                            onPress={() => { this.props.navigation.goBack(); }} />
+                        <TouchableOpacity style={{ height: 40 }} onPress={() => { this.props.navigation.goBack(); }}>
+                            <Text style={styles.Topper}>返回</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             );
         } else if (this.props.choose === 2) {
             return (
                 <View style={styles.Fotter}>
-                        <View style={{ flex: 1, paddingTop: 10 }}>
-                            <Button title="夜间模式"
-                                color="#fff"
-                                onPress={() => { this.props.SModeChange(); }} />
-                        </View>
-                        <View style={{ flex: 2, paddingTop: 10 }}>
-                            <Button title="缓存"
-                                color="#fff"
-                                onPress={() => { this.DoCache() }} />
-                        </View>
-                        <View style={{ flex: 1, paddingTop: 10 }}>
-                            <Button title="设置"
-                                color="#fff"
-                                onPress={() => { this.props.navigation.goBack(); }} />
-                        </View>
-                </View>
-            );
-        } else if (this.props.choose === 3) {
-            return (
-                <View style={styles.ChapterNav}>
-                    <View style={{ flex: 1, paddingTop: 25 }}>
-                        <Button title="返回"
-                            color="#fff"
-                            onPress={() => { this.props.navigation.goBack(); }} />
-                    </View>
-                    <View style={{ flex: 2 }}></View>
-                    <View style={{ flex: 1, paddingTop: 25 }}>
-                        <Button title="到底部"
-                            color="#fff"
-                            onPress={this.props.goDown}
-                        />
-                    </View>
+
+                    <TouchableOpacity style={{ flex: 1 }} onPress={() => { this.props.SModeChange(); }}>
+                        <Icon
+                            name="burst"
+                            size={20}
+                            color={'#fff'}
+                            style={{ textAlign: 'center' }} />
+                        <Text style={styles.FotterItems}>切换</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={this.JmptoChapterList}>
+                        <Icon
+                            name="list"
+                            size={20}
+                            color={'#fff'}
+                            style={{ textAlign: 'center' }} />
+                        <Text style={styles.FotterItems}>目录</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={() => { this.DoCache() }}>
+                        <Icon
+                            name="download"
+                            size={20}
+                            color={'#fff'}
+                            style={{ textAlign: 'center' }} />
+                        <Text style={styles.FotterItems}>缓存</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={() => { alert('coming soon...') }}>
+                        <Icon
+                            name="widget"
+                            size={20}
+                            color={'#fff'}
+                            style={{ textAlign: 'center' }} />
+                        <Text style={styles.FotterItems}>设置</Text>
+                    </TouchableOpacity>
                 </View>
             );
         }
@@ -96,14 +102,9 @@ const styles = StyleSheet.create({
         top: 0,
         flexDirection: 'row'
     },
-    ChapterNav: {
-        height: 64,
-        backgroundColor: '#000',
-        width: width,
-        flexDirection: 'row'
-    },
     Fotter: {
         height: 50,
+        paddingTop: 7,
         backgroundColor: '#000',
         zIndex: 2,
         width: width,
@@ -111,5 +112,11 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         flexDirection: 'row'
+    },
+    Topper: {
+        color: '#FFF', textAlign: 'center', marginTop: 12, fontSize: 16,
+    },
+    FotterItems: {
+        color: "#fff", textAlign: 'center', fontSize: 12,
     },
 });
