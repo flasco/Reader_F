@@ -27,7 +27,6 @@ q.drain = function () {
 function fetchList(nurl, callback) {
     let n = 100 * (finishTask / allTask) >> 0; //取整
     if (n % 1 === 0) {
-        // tht.refs.toast.show(`Task process:${n}%`);
         tht.setState({hintText:`Task process:${n}%`});
     }
     if (tht.state.chapterMap[nurl] !== undefined) {
@@ -38,7 +37,6 @@ function fetchList(nurl, callback) {
         tht._fetch(fetch(url), 5000).then((Response) => Response.json()).then(responseData => {
             tht.state.chapterMap[nurl] = responseData;
             finishTask++;
-            // console.log(responseData);
             callback();
         }).catch((Error) => {
             console.warn(Error);
@@ -77,7 +75,6 @@ export default class NovelRead extends Component {
         });
         bookPlant = this.state.currentBook.bookName + '_'
             + this.state.currentBook.plantformId;
-        // DeviceStorage.clear(bookPlant);
         DeviceStorage.get('booklist').then(val => {
             booklist = val;
             this.setState({ currentBook: booklist[this.state.currentNum] });

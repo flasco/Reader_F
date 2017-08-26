@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button } from 'react-native';
-
+import urlTool from 'url'
 var ChapterList,booklist;
 export default class NovelList extends Component {
     _FlatList; lengt = 1;
@@ -44,6 +44,15 @@ export default class NovelList extends Component {
         booklist = this.props.navigation.state.params.name + '_list';
         console.log(booklist);
         DeviceStorage.get(booklist).then((val) => {
+            if(val !== null) {
+                let t_u = this.props.navigation.state.params.url;
+                let hos1 = urlTool.parse(t_u).host;
+                let hos2 = urlTool.parse(val[0].key).host;
+                console.log(hos1 + '  ' + hos2 );
+                if (hos1 !== hos2 ){
+                    val = null;
+                }
+            }
             if (val === null) {
                 console.log('检测书籍本地目录为空');
                 ChapterList = [];
@@ -56,6 +65,7 @@ export default class NovelList extends Component {
                 console.log(chap);
                 let inx = 0,iny = this.state.dataSource.length;
                 while(inx<iny){
+                    // console.log(this.state.dataSource[inx].key)
                     if(this.state.dataSource[inx].key === chap){
                         break;
                     }

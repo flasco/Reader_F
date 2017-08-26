@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, Button } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
 import React from 'react';
 
 const window = Dimensions.get('window');
@@ -16,26 +16,37 @@ export default class Menu extends React.PureComponent {
 
     CleanData = () => {
         alert('除书架记录之外的数据已经全部清空');
-        let booklist ;
+        let booklist;
         DeviceStorage.get('booklist').then(val => {
-            booklist = val ;
+            booklist = val;
         })
-        .then(()=>{
-            DeviceStorage.cleanAll()
-            .then(()=>{
-                DeviceStorage.save('booklist',booklist);
-            })
-        });
+            .then(() => {
+                DeviceStorage.cleanAll()
+                    .then(() => {
+                        DeviceStorage.save('booklist', booklist);
+                    })
+            });
     }
 
     render() {
         const { navigate } = this.props.navigation;
         return (
             <View style={styles.menu}>
-                <Text style={styles.item} onPress={() => navigate('Sear', { addBook: this.props.addBook })}>Search</Text>
-                <Text style={styles.item} onPress={() => { alert('Still wait to add.') }}>RankList</Text>
-                <Text style={styles.item} onPress={this.leanMore}>Learn More</Text>
-                <Text style={styles.item} onPress={this.CleanData}>CleanAllData</Text>
+                <TouchableOpacity onPress={() => navigate('Sear', { addBook: this.props.addBook })}>
+                    <Text style={styles.item} >Search</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => { alert('Still wait to add.') }}>
+                    <Text style={styles.item} >RankList</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.leanMore}>
+                    <Text style={styles.item} >Learn More</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.CleanData}>
+                    <Text style={styles.item} >CleanAllData</Text>
+                </TouchableOpacity>
+
+
+
             </View>
         );
     }

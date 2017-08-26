@@ -36,15 +36,17 @@ export default class BookPackage extends Component {
                 backgroundColor: '#000'
             },
             headerRight: (
-                <Icon
+                <TouchableOpacity onPress={() => { tht._OpenMenu() }}>
+                    <Icon
                     name="plus"
                     size={30}
                     color={'#fff'}
-                    onPress={() => { tht._OpenMenu() }} //修复进入目录之后回点发生崩溃的问题
                     style={{
                         marginRight: 15,
                     }}
                 />
+                </TouchableOpacity>
+                
             ),
             headerTitleStyle: {
                 color: '#fff',
