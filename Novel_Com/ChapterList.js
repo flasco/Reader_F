@@ -41,8 +41,7 @@ export default class NovelList extends Component {
     }
 
     componentDidMount() {
-        booklist = this.props.navigation.state.params.name + '_list';
-        console.log(booklist);
+        booklist = this.props.navigation.state.params.bookChapterLst;
         DeviceStorage.get(booklist).then((val) => {
             if(val !== null) {
                 let t_u = this.props.navigation.state.params.url;
@@ -81,8 +80,8 @@ export default class NovelList extends Component {
     getNet = (nurl,callback) => {
         if (ChapterList.length === 0) {
             let url = 'http://testdb.leanapp.cn/Analy_x?action=1&url=' + nurl;
-            fetch(url).then((Response) => Response.json()).then(responseData => {
-                let data = responseData.reverse();
+            axios.get(url,{timeout:5000}).then(Response=>{
+                let data = Response.data.reverse();
                 let n = [];
                 let i = 0;
                 while (i < data.length) {
@@ -123,6 +122,7 @@ export default class NovelList extends Component {
             <TouchableOpacity style={{ height: 38 }}
                 onPress={() => {
                     this.props.navigation.state.params.callback(url);
+                    console.log(url);
                     this.props.navigation.goBack();
                 }}>
                 <Text style={[styles.rowStyle,this.state.currentCh===url?styles.red:false]}>{txt}</Text>

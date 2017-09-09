@@ -19,7 +19,7 @@ var q = async.queue(function (url, callback) {
 
 q.drain = function () {
     tht.refs.toast.show(`Task finished`);
-    tht.setState({hintText:''});
+    tht.setState({ hintText: '' });
     finishTask = 0;
     DeviceStorage.save(bookPlant, tht.state.chapterMap);
 }
@@ -27,21 +27,30 @@ q.drain = function () {
 function fetchList(nurl, callback) {
     let n = 100 * (finishTask / allTask) >> 0; //取整
     if (n % 2 === 0) {
-        tht.setState({hintText:`Task process:${n}%`});
+        tht.setState({ hintText: `Task process:${n}%` });
     }
     if (tht.state.chapterMap[nurl] !== undefined) {
         finishTask++;
         callback(); return;
     } else {
         let url = 'http://testdb.leanapp.cn/Analy_x?action=2&url=' + nurl;
-        tht._fetch(fetch(url), 5000).then((Response) => Response.json()).then(responseData => {
-            tht.state.chapterMap[nurl] = responseData;
+        axios.get(url,{timeout:5000}).then(Response=>{
+            tht.state.chapterMap[nurl] = Response.data;
             finishTask++;
             callback();
         }).catch((Error) => {
             console.warn(Error);
             callback();
         }).done();
+        
+        // tht._fetch(fetch(url), 5000).then((Response) => Response.json()).then(responseData => {
+        //     tht.state.chapterMap[nurl] = responseData;
+        //     finishTask++;
+        //     callback();
+        // }).catch((Error) => {
+        //     console.warn(Error);
+        //     callback();
+        // }).done();
     }
 
 }
@@ -67,7 +76,7 @@ export default class NovelRead extends Component {
             Gpag: 0, //判断是前往上一章（-1）还是下一章（1）
             chapterMap: new Map(),
             SMode: true,
-            hintText:'',
+            hintText: '',
         };
         DeviceStorage.get('SMode').then(val => {
             if (val !== null) {
@@ -92,9 +101,8 @@ export default class NovelRead extends Component {
             }
         }).then(() => {
             if (this.state.currentBook.recordChapter === '') {
-                let tg = this.state.currentBook.bookName + '_list';
-                console.log(tg);
-                DeviceStorage.get(tg).then(val => {
+                let bookChapterLst = `${this.state.currentBook.bookName}_${this.state.currentBook.plantformId}_list`;
+                DeviceStorage.get(bookChapterLst).then(val => {
                     console.log(val);
                     if (val === null) {//没有获取章节列表的情况
                         this.refs.toast.show('请获取一遍章节列表再重新进入。');
@@ -114,7 +122,7 @@ export default class NovelRead extends Component {
     }
 
     showAlertSelected = () => {
-        this._dia.show("缓存多少章？", ["后面50章", "后面全部"], '#333333', this.callbackSelected);
+        this._dia.show("缓存多少章？", ["后面100章", "后面全部"], '#333333', this.callbackSelected);
     }
     // 回调
     callbackSelected = (i) => {
@@ -129,7 +137,9 @@ export default class NovelRead extends Component {
     }
 
     download_Chapter = (flag = true) => {//默认是缓存50章
-        DeviceStorage.get(this.state.currentBook.bookName + '_list').then(val => {
+        let bookChapterLst = `${this.state.currentBook.bookName}_${this.state.currentBook.plantformId}_list`;
+
+        DeviceStorage.get(bookChapterLst).then(val => {
             let ChaptUrl = booklist[this.state.currentNum].recordChapter;
             let i = 0, j = val.length;
             while (i < j) {
@@ -138,7 +148,7 @@ export default class NovelRead extends Component {
                 }
                 i++;
             }
-            let End = flag ? (i >= 50 ? i - 50 : 0) : (0);
+            let End = flag ? (i >= 100 ? i - 100 : 0) : (0);
             allTask = i - End;
             for (let n = End; n < i; n++) {
                 q.push(val[n].key);
@@ -159,49 +169,33 @@ export default class NovelRead extends Component {
         );
     }
 
-    _fetch(fetch_promise, timeout) {
-        var abort_fn = null;
-        var abort_promise = new Promise(function (resolve, reject) {
-            abort_fn = function () {
-                reject('Time out');
-            };
-        });
-        var abortable_promise = Promise.race([
-            fetch_promise,
-            abort_promise
-        ]);
-        setTimeout(function () {
-            abort_fn();
-        }, timeout);
-
-        return abortable_promise;
-    }
-
     getNet = (nurl, direct) => {
         booklist[this.state.currentNum].recordChapter = nurl;
         DeviceStorage.save('booklist', booklist);
         if (this.state.chapterMap[nurl] === undefined) {
-            // console.log('fetch...')
             let url = 'http://testdb.leanapp.cn/Analy_x?action=2&url=' + nurl;//this.state.test.next
 
-            this._fetch(fetch(url), 5000).then((Response) => Response.json()).then(responseData => {
+            axios.get(url, {
+                timeout: 8000,
+            }).then(Response => {
+                console.log(Response);
                 this.setState({
-                    test: responseData,
+                    test: Response.data,
                     loadFlag: false,
                     Gpag: direct,
                 }, () => {
-                    this.state.chapterMap[nurl] = responseData;
+                    this.state.chapterMap[nurl] = Response.data;
                     DeviceStorage.save(bookPlant, this.state.chapterMap);
                 });
-            }).catch((Error) => {
-                let epp = { title: "网络连接超时", content: "网络连接超时.", prev: "error", next: "error" }
-                this.setState({
-                    test: epp,
-                    loadFlag: false,
-                    Gpag: direct,
-                });
-                //  console.warn(Error);
-            }).done();
+            })
+                .catch((Error) => {
+                    let epp = { title: "网络连接超时啦啦啦啦啦", content: "网络连接超时.", prev: "error", next: "error" }
+                    this.setState({
+                        test: epp,
+                        loadFlag: false,
+                        Gpag: direct,
+                    });
+                }).done();
         } else {
             this.setState({
                 test: this.state.chapterMap[nurl],
@@ -237,10 +231,7 @@ export default class NovelRead extends Component {
     }
 
     _SMode_Change = () => {
-        console.log('_Smode.change');
-
         let s = tht.state.SMode;
-
         tht.setState({ SMode: !s }, () => {
             DeviceStorage.save('SMode', !s);
         });
@@ -274,7 +265,7 @@ export default class NovelRead extends Component {
                     <Navigat
                         navigation={this.props.navigation}
                         choose={1}
-                        
+
                     />
                 ) : (false)}
 
@@ -302,6 +293,7 @@ export default class NovelRead extends Component {
                         urlx={this.state.currentBook.url}
                         currentChapter={this.state.currentBook.recordChapter}
                         bname={this.state.currentBook.bookName}
+                        bookChapterLst={`${this.state.currentBook.bookName}_${this.state.currentBook.plantformId}_list`}
                         getChapterUrl={this._getChapterUrl}
                         navigation={this.props.navigation}
                         showAlertSelected={this.showAlertSelected}

@@ -11,7 +11,9 @@ import SearchBook from './Novel_Com/SearchBook';
 import { StackNavigator } from 'react-navigation';
 
 import DeviceStorage from './util/DeviceStorage'
+import axios from 'axios';
 
+global.axios = axios;
 global.DeviceStorage = DeviceStorage;
 
 SearchBook.navigationOptions = ({navigation}) => {

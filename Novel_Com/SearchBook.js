@@ -10,6 +10,7 @@ var UrlId = [
     'biqiuge',
     'kanshuz',
     'qu.la',
+    'xs.la',
 ]
 export default class SearchBook extends Component {
     constructor(props) {
@@ -33,8 +34,9 @@ export default class SearchBook extends Component {
 
     SearchBook = (text) => {
         let url = `http://testdb.leanapp.cn/sear?name=${text}`;
-        fetch(url).then((Response) => Response.json()).then(responseData => {
-            let data = responseData;
+
+        axios.get(url,{timeout:5000}).then(Response=>{
+            let data = Response.data;
             if (data === 'error...') {
                 this.setState({
                     dataSource: '',
@@ -46,8 +48,7 @@ export default class SearchBook extends Component {
                     hint: `搜索到${data.length}条相关数据。`
                 });
             }
-
-        });
+        })
     }
 
     addBook = (data) => {

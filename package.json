@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "async": "^2.5.0",
+    "axios": "^0.16.2",
     "babel-eslint": "^7.2.3",
     "dateformat": "^2.0.0",
     "json": "^9.0.6",

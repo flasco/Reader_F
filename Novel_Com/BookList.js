@@ -11,7 +11,7 @@ import {
 import SideMenu from 'react-native-side-menu';
 import SplashScreen from 'react-native-splash-screen';
 import Icon from 'react-native-vector-icons/Foundation';
-import Swipeout from 'react-native-swipeout'
+import Swipeout from 'react-native-swipeout';
 
 
 import PullRefreshScrollView from '../RefreshScollowView_Re/PullRefreshScrollView';
