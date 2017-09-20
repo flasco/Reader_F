@@ -6,6 +6,7 @@ import {
     ListView,
     TouchableOpacity,
     StatusBar,
+    InteractionManager
 } from 'react-native';
 
 import SideMenu from 'react-native-side-menu';
@@ -189,9 +190,13 @@ class BookList extends Component {
                 close={!(this.state.sectionID === sectionID && this.state.rowID === rowID)}
                 backgroundColor={'#F5FCFF'}>
                 <TouchableOpacity
-                    onPress={() => navigate('Read', {
-                        bookNum: booklist.indexOf(rowData),
-                    })}>
+                    onPress={() => {
+                        InteractionManager.runAfterInteractions(() => {
+                            navigate('Read', {
+                                bookNum: booklist.indexOf(rowData),
+                            })
+                        });
+                    }}>
                     <View style={{
                         height: 52
                     }}>
@@ -202,7 +207,7 @@ class BookList extends Component {
 
                     </View>
                 </TouchableOpacity>
-            </Swipeout>
+            </Swipeout >
         );
     }
     _renderSeparator = () => {

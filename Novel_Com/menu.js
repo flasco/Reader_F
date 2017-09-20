@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, InteractionManager } from 'react-native';
 import React from 'react';
 
 const window = Dimensions.get('window');
@@ -32,7 +32,9 @@ export default class Menu extends React.PureComponent {
         const { navigate } = this.props.navigation;
         return (
             <View style={styles.menu}>
-                <TouchableOpacity onPress={() => navigate('Sear', { addBook: this.props.addBook })}>
+                <TouchableOpacity onPress={() => 
+                    navigate('Sear', { addBook: this.props.addBook })
+                }>
                     <Text style={styles.item} >Search</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => { alert('Still wait to add.') }}>

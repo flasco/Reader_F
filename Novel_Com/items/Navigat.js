@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity, InteractionManager } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Foundation';
 
@@ -22,16 +22,18 @@ export default class Navigat extends Component {
 
     DoCache = () => {
         this.props.showAlertSelected();
+
     }
     JmptoChapterList = () => {
         this.props.navigation
             .navigate('ChaL', {
                 url: this.props.urlx,
                 name: this.props.bname,
-                bookChapterLst:this.props.bookChapterLst,
+                bookChapterLst: this.props.bookChapterLst,
                 chap: this.props.currentChapter,
                 callback: (url) => this.props.getChapterUrl(url)
             });
+
     }
 
     render() {

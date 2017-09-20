@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Dimensions, StatusBar } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, StatusBar, InteractionManager, LayoutAnimation } from 'react-native';
 
 import Toast from 'react-native-easy-toast';
 
@@ -12,13 +12,13 @@ import Navigat from './items/Navigat';
 import async from 'async';
 
 var q = async.queue(function (url, callback) {
-    fetchList(url, () => {
-        callback(null);
-    });
+        fetchList(url, () => {
+            callback(null);
+        });
 }, 5)
 
 q.drain = function () {
-    tht.refs.toast.show(`Task finished`);
+    tht.refs.toast.show(`Task finished at ${finishTask}/${allTask}`);
     tht.setState({ hintText: '' });
     finishTask = 0;
     DeviceStorage.save(bookPlant, tht.state.chapterMap);
@@ -26,7 +26,7 @@ q.drain = function () {
 
 function fetchList(nurl, callback) {
     let n = 100 * (finishTask / allTask) >> 0; //取整
-    if (n % 2 === 0) {
+    if (n % 4 === 0) {
         tht.setState({ hintText: `Task process:${n}%` });
     }
     if (tht.state.chapterMap[nurl] !== undefined) {
@@ -34,7 +34,7 @@ function fetchList(nurl, callback) {
         callback(); return;
     } else {
         let url = 'http://testdb.leanapp.cn/Analy_x?action=2&url=' + nurl;
-        axios.get(url,{timeout:5000}).then(Response=>{
+        axios.get(url, { timeout: 5000 }).then(Response => {
             tht.state.chapterMap[nurl] = Response.data;
             finishTask++;
             callback();
@@ -42,15 +42,6 @@ function fetchList(nurl, callback) {
             console.warn(Error);
             callback();
         }).done();
-        
-        // tht._fetch(fetch(url), 5000).then((Response) => Response.json()).then(responseData => {
-        //     tht.state.chapterMap[nurl] = responseData;
-        //     finishTask++;
-        //     callback();
-        // }).catch((Error) => {
-        //     console.warn(Error);
-        //     callback();
-        // }).done();
     }
 
 }
@@ -103,7 +94,6 @@ export default class NovelRead extends Component {
             if (this.state.currentBook.recordChapter === '') {
                 let bookChapterLst = `${this.state.currentBook.bookName}_${this.state.currentBook.plantformId}_list`;
                 DeviceStorage.get(bookChapterLst).then(val => {
-                    console.log(val);
                     if (val === null) {//没有获取章节列表的情况
                         this.refs.toast.show('请获取一遍章节列表再重新进入。');
                     } else {
@@ -117,7 +107,6 @@ export default class NovelRead extends Component {
                 this.getNet(this.state.currentBook.recordChapter, 0);
                 booklist[this.state.currentNum].recordPage = 1;//修复进入章节后从目录进入新章节页数记录不正确的bug
             }
-
         })
     }
 
@@ -128,10 +117,14 @@ export default class NovelRead extends Component {
     callbackSelected = (i) => {
         switch (i) {
             case 0: // 50章
-                this.download_Chapter(); //true 表示是50章，false是缓存剩下的全部 
+                InteractionManager.runAfterInteractions(() => {
+                    this.download_Chapter(); //true 表示是50章，false是缓存剩下的全部 
+                });
                 break;
             case 1: // 之后全部
-                this.download_Chapter(false);
+                InteractionManager.runAfterInteractions(() => {
+                    this.download_Chapter(false);
+                });
                 break;
         }
     }
@@ -174,11 +167,10 @@ export default class NovelRead extends Component {
         DeviceStorage.save('booklist', booklist);
         if (this.state.chapterMap[nurl] === undefined) {
             let url = 'http://testdb.leanapp.cn/Analy_x?action=2&url=' + nurl;//this.state.test.next
-
             axios.get(url, {
                 timeout: 8000,
             }).then(Response => {
-                console.log(Response);
+                // console.log(Response);
                 this.setState({
                     test: Response.data,
                     loadFlag: false,
@@ -227,6 +219,16 @@ export default class NovelRead extends Component {
     }
     _clickBoard = () => {
         let flag = this.state.menuF;
+        LayoutAnimation.configureNext({
+            duration: 200, //持续时间
+            create: { // 视图创建
+                type: LayoutAnimation.Types.linear,
+                property: LayoutAnimation.Properties.opacity,// opacity
+            },
+            update: { // 视图更新
+                type: LayoutAnimation.Types.linear,
+            },
+        });
         this.setState({ menuF: !flag });
     }
 

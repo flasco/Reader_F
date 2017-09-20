@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ListView, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, ListView, TextInput, TouchableOpacity, Alert, InteractionManager } from 'react-native';
 import React, { Component } from 'react';
 
 import Toast, { DURATION } from 'react-native-easy-toast'
@@ -18,7 +18,7 @@ export default class SearchBook extends Component {
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
-        
+
         this.state = {
             text: '',
             dataSource: '',
@@ -35,7 +35,7 @@ export default class SearchBook extends Component {
     SearchBook = (text) => {
         let url = `http://testdb.leanapp.cn/sear?name=${text}`;
 
-        axios.get(url,{timeout:5000}).then(Response=>{
+        axios.get(url, { timeout: 5000 }).then(Response => {
             let data = Response.data;
             if (data === 'error...') {
                 this.setState({
@@ -75,16 +75,17 @@ export default class SearchBook extends Component {
                         null,
                         `你要把[${rowData.name}]添加到书架中吗？`,
                         [
-                            { text: 'Yes', onPress: () => this.props.navigation.state.params.addBook(rowData) },
+                            { text: 'Yes', onPress: () => InteractionManager.runAfterInteractions(() => { this.props.navigation.state.params.addBook(rowData) }) },
                             { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
                         ],
                         { cancelable: false })
-                }}>
+                }
+                }>
                 <View style={{
                     height: 52
                 }}>
                     <Text style={styles.rowStyle}>
-                        {`${rowData.name} - ${rowData.author}   ${UrlId[rowData.plantFormId-1]}`}
+                        {`${rowData.name} - ${rowData.author}   ${UrlId[rowData.plantFormId - 1]}`}
                     </Text>
                 </View>
             </TouchableOpacity>
