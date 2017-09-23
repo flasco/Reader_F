@@ -32,6 +32,7 @@ export default class SearchBook extends Component {
         )
     }
 
+
     SearchBook = (text) => {
         let url = `http://testdb.leanapp.cn/sear?name=${text}`;
 

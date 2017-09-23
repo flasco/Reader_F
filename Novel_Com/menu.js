@@ -7,11 +7,15 @@ export default class Menu extends React.PureComponent {
     leanMore = () => {
         const sturl = 'http://testdb.leanapp.cn/start?h=6';//运转6小时
         fetch(sturl).then(res => {
-            console.log(res);
-            alert('Study at 6 hours');
+            // console.log(res);
+            alert('Server will run for 6 hours');
         }).catch((Error) => {
-            console.warn(Error);
+            // console.warn(Error);
         }).done();
+    }
+
+    shouldComponentUpdate(nextProps,nextState){
+        return nextProps.data !== this.props.data;
     }
 
     CleanData = () => {

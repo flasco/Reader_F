@@ -47,13 +47,13 @@ export default class NovelList extends Component {
                 let t_u = this.props.navigation.state.params.url;
                 let hos1 = urlTool.parse(t_u).host;
                 let hos2 = urlTool.parse(val[0].key).host;
-                console.log(hos1 + '  ' + hos2 );
+                // console.log(hos1 + '  ' + hos2 );
                 if (hos1 !== hos2 ){
                     val = null;
                 }
             }
             if (val === null) {
-                console.log('检测书籍本地目录为空');
+                // console.log('检测书籍本地目录为空');
                 ChapterList = [];
                 DeviceStorage.save(booklist, ChapterList);
             } else {
@@ -61,7 +61,7 @@ export default class NovelList extends Component {
             }
             this.getNet(this.props.navigation.state.params.url,()=>{
                 let chap = this.state.currentCh;
-                console.log(chap);
+                // console.log(chap);
                 let inx = 0,iny = this.state.dataSource.length;
                 while(inx<iny){
                     // console.log(this.state.dataSource[inx].key)
@@ -101,7 +101,7 @@ export default class NovelList extends Component {
                     callback();
                 });
             }).catch((Error) => {
-                console.warn(Error);
+                // console.warn(Error);
             }).done();
         } else {
             lengt = ChapterList.length-1;
@@ -122,7 +122,7 @@ export default class NovelList extends Component {
             <TouchableOpacity style={{ height: 38 }}
                 onPress={() => {
                     this.props.navigation.state.params.callback(url);
-                    console.log(url);
+                    {/* console.log(url); */}
                     this.props.navigation.goBack();
                 }}>
                 <Text style={[styles.rowStyle,this.state.currentCh===url?styles.red:false]}>{txt}</Text>

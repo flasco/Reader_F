@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
 import {
-    StyleSheet,
-    Text,
-    View,
-    ListView,
-    TouchableOpacity,
-    StatusBar,
-    InteractionManager
+    StyleSheet,Text, View,ListView,TouchableOpacity, 
+    StatusBar,InteractionManager
 } from 'react-native';
 
 import SideMenu from 'react-native-side-menu';
 import SplashScreen from 'react-native-splash-screen';
 import Icon from 'react-native-vector-icons/Foundation';
 import Swipeout from 'react-native-swipeout';
-
 
 import PullRefreshScrollView from '../RefreshScollowView_Re/PullRefreshScrollView';
 import Menu from './menu';
@@ -69,7 +63,7 @@ export default class BookPackage extends Component {
     }
 
     _addBook = (data) => {
-        console.log(data);
+        // console.log(data);
         let book = {
             bookName: data.name,
             author: data.author,
@@ -121,10 +115,10 @@ class BookList extends Component {
             load: true,
         };
         DeviceStorage.get('booklist').then(val => {
-            if (val === null) {
+            if (val === null || val.length===0 ) {
                 booklist = [
                     {
-                        bookName: '美食爱好者',
+                        bookName: '美食供应商',
                         author: '菜猫',
                         url: 'http://www.biqiuge.com/book/6888/',
                         recordChapter: 'http://www.biqiuge.com/book/6888/4560933.html',
@@ -132,23 +126,23 @@ class BookList extends Component {
                         recordPage: 1,
                         plantformId: 5,
                     }, {
-                        bookName: '直死无限',
-                        author: '如倾如诉',
-                        url: 'http://www.biqiuge.com/book/4912/',
-                        recordChapter: 'http://www.biqiuge.com/book/4912/3102895.html',
+                        bookName: '飞剑问道',
+                        author: '我吃西红柿',
+                        url: 'http://www.biqiuge.com/book/24277/',
+                        recordChapter: 'http://www.biqiuge.com/book/24277/15320481.html',
                         latestChapter: '待检测',
                         recordPage: 1,
                         plantformId: 5,
                     }
                 ];
-                console.log('检测发现你是第一次使用本app，没有书架记录。');
+                alert('发现书架为空，自动添加书籍。')
                 DeviceStorage.save('booklist', booklist);
                 this.setState({
                     dataSource: ds.cloneWithRows(booklist),
                     load: false
                 });
             } else {
-                console.log('have');
+                // console.log('have');
                 booklist = val;
 
                 this.setState({
@@ -171,8 +165,8 @@ class BookList extends Component {
         }, () => {
             DeviceStorage.save('booklist', booklist);
         })
-
     }
+
     _renderRow = (rowData, sectionID, rowID) => {
         const { navigate } = this.props.navigation;
         return (

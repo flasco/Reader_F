@@ -19,27 +19,27 @@ var q = async.queue(function (url, callback) {
 
 q.drain = function () {
     tht.refs.toast.show(`Task finished at ${finishTask}/${allTask}`);
-    tht.setState({ hintText: '' });
     finishTask = 0;
-    DeviceStorage.save(bookPlant, tht.state.chapterMap);
+    DeviceStorage.save(bookPlant, tht.chapterMap);
 }
 
 function fetchList(nurl, callback) {
     let n = 100 * (finishTask / allTask) >> 0; //取整
-    if (n % 4 === 0) {
-        tht.setState({ hintText: `Task process:${n}%` });
+    if (n % 15 === 0) {
+        // tht.setState({ hintText: `Task process:${n}%` });
+        tht.refs.toast.show(`Task process:${n}%`);
     }
-    if (tht.state.chapterMap[nurl] !== undefined) {
+    if (tht.chapterMap[nurl] !== undefined) {
         finishTask++;
         callback(); return;
     } else {
         let url = 'http://testdb.leanapp.cn/Analy_x?action=2&url=' + nurl;
         axios.get(url, { timeout: 5000 }).then(Response => {
-            tht.state.chapterMap[nurl] = Response.data;
+            tht.chapterMap[nurl] = Response.data;
             finishTask++;
             callback();
         }).catch((Error) => {
-            console.warn(Error);
+            // console.warn(Error);
             callback();
         }).done();
     }
@@ -58,6 +58,7 @@ export default class NovelRead extends Component {
         super(props);
         tht = this;
         totalPage = 0;//总的页数
+        chapterMap =  new Map();
         this.state = {
             currentBook: '',
             currentNum: props.navigation.state.params.bookNum,
@@ -65,9 +66,7 @@ export default class NovelRead extends Component {
             test: '', //作为章节内容的主要获取来源。
             menuF: false, //判断导航栏是否应该隐藏
             Gpag: 0, //判断是前往上一章（-1）还是下一章（1）
-            chapterMap: new Map(),
             SMode: true,
-            hintText: '',
         };
         DeviceStorage.get('SMode').then(val => {
             if (val !== null) {
@@ -83,12 +82,10 @@ export default class NovelRead extends Component {
 
         DeviceStorage.get(bookPlant).then(val => {
             if (val === null) {
-                console.log('检测书籍本地记录为空，为第一次打开本书');
+                // console.log('检测书籍本地记录为空，为第一次打开本书');
                 DeviceStorage.save(bookPlant, new Map());
             } else {
-                this.setState({
-                    chapterMap: val,
-                });
+                this.chapterMap = val;
             }
         }).then(() => {
             if (this.state.currentBook.recordChapter === '') {
@@ -157,7 +154,7 @@ export default class NovelRead extends Component {
                 data={data}
                 presPag={Number(pageID) + 1}
                 totalPage={totalPage}
-                hintText={this.state.hintText}
+                /* hintText={this.state.hintText} */
             ></Readeitems>
         );
     }
@@ -165,7 +162,7 @@ export default class NovelRead extends Component {
     getNet = (nurl, direct) => {
         booklist[this.state.currentNum].recordChapter = nurl;
         DeviceStorage.save('booklist', booklist);
-        if (this.state.chapterMap[nurl] === undefined) {
+        if (this.chapterMap[nurl] === undefined) {
             let url = 'http://testdb.leanapp.cn/Analy_x?action=2&url=' + nurl;//this.state.test.next
             axios.get(url, {
                 timeout: 8000,
@@ -176,8 +173,8 @@ export default class NovelRead extends Component {
                     loadFlag: false,
                     Gpag: direct,
                 }, () => {
-                    this.state.chapterMap[nurl] = Response.data;
-                    DeviceStorage.save(bookPlant, this.state.chapterMap);
+                    this.chapterMap[nurl] = Response.data;
+                    DeviceStorage.save(bookPlant, this.chapterMap);
                 });
             })
                 .catch((Error) => {
@@ -190,7 +187,7 @@ export default class NovelRead extends Component {
                 }).done();
         } else {
             this.setState({
-                test: this.state.chapterMap[nurl],
+                test: this.chapterMap[nurl],
                 loadFlag: false,
                 Gpag: direct,
             })

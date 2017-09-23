@@ -56,3 +56,4 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 util/fetch_Timeout.js
+ios/Reader_F/Images.xcassets/AppIcon.appiconset/Contents.json

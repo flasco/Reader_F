@@ -4,11 +4,10 @@ import { StyleSheet, Text, View} from 'react-native';
 import dateFormat from 'dateformat';
 
 export default class Readitems extends Component {
-    hint = this.props.hintText;
-    // shouldComponentUpdate(){
-    //     if()
-    //     return false;
-    // }
+    // hint = this.props.hintText;
+    shouldComponentUpdate(nextProps,nextState){
+        return nextProps.data !== this.props.data;
+    }
     render(){
         return (
             <View style={[styles.container,this.props.SMode?(styles.SunnyMode_container):(styles.MoonMode_container)]}>
@@ -16,7 +15,7 @@ export default class Readitems extends Component {
                 <Text style={[styles.textsize,this.props.SMode?(styles.SunnyMode_text):(styles.MoonMode_text)]} numberOfLines={21}>{this.props.data}</Text>
                 <View style={styles.bottView}>
                     <Text style={[styles.bottom1,this.props.SMode?(false):(styles.MoonMode_Bottom)]}>{dateFormat(new Date(), 'H:MM')}</Text>
-                    <Text style={this.props.SMode?(false):(styles.MoonMode_Bottom)}>{this.hint}</Text>
+                    {/* <Text style={this.props.SMode?(false):(styles.MoonMode_Bottom)}>{this.hint}</Text> */}
                     <Text style={[styles.bottom2,this.props.SMode?(false):(styles.MoonMode_Bottom)]} >{this.props.presPag}/{this.props.totalPage} </Text>
                 </View>
             </View>

@@ -221,7 +221,7 @@ var ViewPager = React.createClass({
     // if(pageNumber>pageCount) pageNumber = pageCount - 1;
     // console.log('pageNumber:'+pageNumber+'    pageCount:'+pageCount);
     if (pageNumber < 0 || pageNumber > pageCount) {
-      console.error('Invalid page number: ', pageNumber);
+      // console.error('Invalid page number: ', pageNumber);
       return
     }
 
@@ -243,7 +243,7 @@ var ViewPager = React.createClass({
         pageNumber = tmpag-1;
       }
       this.props.getCurrentPage(pageNumber+1);
-      console.log(pageNumber)
+      // console.log(pageNumber)
       return;
     }else if(pageNumber<0&&this.state.toprev==1){
         this.props.getPrevPage();
