@@ -10,6 +10,10 @@ import getContextArr from '../util/getContextArr';
 import Readeitems from './items/Readitems';
 import Navigat from './items/Navigat';
 
+/**
+ * 下载模块
+ - code by Czq
+ */
 var q = async.queue(function (url, callback) {
     fetchList(url, () => {
         callback(null);
@@ -48,6 +52,10 @@ var tht, bookPlant, booklist;
 
 const { height, width } = Dimensions.get('window');
 
+/**
+ * 核心功能，阅读
+ - code by Czq
+ */
 export default class NovelRead extends Component {
     _dia;
     constructor(props) {

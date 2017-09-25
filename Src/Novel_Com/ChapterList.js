@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button } from 'react-native';
 import urlTool from 'url'
 var ChapterList, booklist;
+/**
+ * 书籍目录
+ - code by Czq
+ */
 export default class NovelList extends Component {
     _FlatList; lengt = 1;
     static navigationOptions = ({ navigation }) => {
@@ -146,7 +150,7 @@ export default class NovelList extends Component {
     render() {
         if (this.state.load === true) {
             return (
-                <View style={{ backgroundColor: '#D8D8D8',flex:1 }}>
+                <View style={{ backgroundColor: '#D8D8D8', flex: 1 }}>
                     <FlatList
                         initialNumToRender={20}
                         ref={(c) => this._FlatList = c}

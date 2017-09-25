@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
     StyleSheet, Text, View, ListView, TouchableOpacity,
-    StatusBar, InteractionManager
+    StatusBar
 } from 'react-native';
 
 import SideMenu from 'react-native-side-menu';
@@ -14,7 +14,10 @@ import Menu from './menu';
 import getNet from '../util/getNet';
 
 var booklist, tht, tha;
-
+/**
+ * 包装层，为了保证能使用侧滑的菜单
+ - code by Czq
+ */
 export default class BookPackage extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
@@ -103,6 +106,10 @@ export default class BookPackage extends Component {
 }
 
 var RefreshCount = 0;
+/**
+ * 书架
+ - code by Czq
+ */
 class BookList extends Component {
     constructor(props) {
         super(props);
@@ -119,7 +126,7 @@ class BookList extends Component {
             dataSource: '',
             load: true,
         };
-        
+
         DeviceStorage.get('booklist').then(val => {
             if (val === null || val.length === 0) {
                 booklist = [
@@ -189,11 +196,9 @@ class BookList extends Component {
                 backgroundColor={'#F5FCFF'}>
                 <TouchableOpacity
                     onPress={() => {
-                        InteractionManager.runAfterInteractions(() => {
-                            navigate('Read', {
-                                bookNum: booklist.indexOf(rowData),
-                            })
-                        });
+                        navigate('Read', {
+                            bookNum: booklist.indexOf(rowData),
+                        })
                     }}>
                     <View style={{
                         height: 52

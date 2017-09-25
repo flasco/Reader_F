@@ -8,6 +8,7 @@ const { height, width } = Dimensions.get('window');
 /**
  * 这个是自定义的StackNavigator导航栏
  * 用在了NovelRead.js中
+ - code by Czq
  */
 export default class Navigat extends Component {
     constructor(props) {
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
     Topper: {
         color: '#FFF', textAlign: 'center', marginTop: 12, fontSize: 16,
     },
-    fontCenter:{
+    fontCenter: {
         textAlign: 'center',
     },
     FotterItems: {

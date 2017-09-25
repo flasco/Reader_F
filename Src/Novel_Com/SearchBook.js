@@ -11,7 +11,10 @@ var UrlId = [
     'qu.la',
     'xs.la',
 ]
-
+/**
+ * 搜索模块
+ - code by Czq
+ */
 export default class SearchBook extends Component {
     constructor(props) {
         super(props);

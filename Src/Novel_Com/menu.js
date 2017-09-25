@@ -1,8 +1,12 @@
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity, InteractionManager } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
 import React from 'react';
 
 const window = Dimensions.get('window');
 
+/**
+ * 书架的侧滑菜单内容
+ - code by Czq
+ */
 export default class Menu extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -45,7 +49,7 @@ export default class Menu extends React.PureComponent {
                 }>
                     <Text style={styles.item} >Search</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { alert('Still wait to add.') }}>
+                <TouchableOpacity onPress={() => { navigate('RnkL') }}>
                     <Text style={styles.item} >RankList</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this.leanMore}>
