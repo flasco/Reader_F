@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions, StatusBar, InteractionManager, LayoutAnimation } from 'react-native';
 
 import Toast from 'react-native-easy-toast';
+import async from 'async';
 
 import ViewPager from '../viewPager_Re/ViewPager';
 import DialogSelected from '../util/popMenu';
@@ -9,13 +10,11 @@ import getContextArr from '../util/getContextArr';
 import Readeitems from './items/Readitems';
 import Navigat from './items/Navigat';
 
-import async from 'async';
-
 var q = async.queue(function (url, callback) {
-        fetchList(url, () => {
-            callback(null);
-        });
-}, 5)
+    fetchList(url, () => {
+        callback(null);
+    });
+}, 5);
 
 q.drain = function () {
     tht.refs.toast.show(`Task finished at ${finishTask}/${allTask}`);
@@ -26,12 +25,11 @@ q.drain = function () {
 function fetchList(nurl, callback) {
     let n = 100 * (finishTask / allTask) >> 0; //取整
     if (n % 15 === 0) {
-        // tht.setState({ hintText: `Task process:${n}%` });
         tht.refs.toast.show(`Task process:${n}%`);
     }
     if (tht.chapterMap[nurl] !== undefined) {
         finishTask++;
-        callback(); return;
+        callback();
     } else {
         let url = 'http://testdb.leanapp.cn/Analy_x?action=2&url=' + nurl;
         axios.get(url, { timeout: 5000 }).then(Response => {
@@ -39,11 +37,9 @@ function fetchList(nurl, callback) {
             finishTask++;
             callback();
         }).catch((Error) => {
-            // console.warn(Error);
             callback();
         }).done();
     }
-
 }
 
 var allTask = 0, finishTask = 0;
@@ -58,16 +54,32 @@ export default class NovelRead extends Component {
         super(props);
         tht = this;
         totalPage = 0;//总的页数
-        chapterMap =  new Map();
+        chapterMap = new Map();
         this.state = {
             currentBook: '',
             currentNum: props.navigation.state.params.bookNum,
             loadFlag: true, //判断是出于加载状态还是显示状态
-            test: '', //作为章节内容的主要获取来源。
-            menuF: false, //判断导航栏是否应该隐藏
-            Gpag: 0, //判断是前往上一章（-1）还是下一章（1）
+            currentItem: '', //作为章节内容的主要获取来源。
+            isVisible: false, //判断导航栏是否应该隐藏
+            goFlag: 0, //判断是前往上一章（-1）还是下一章（1）
             SMode: true,
         };
+        this.initConf = this.initConf.bind(this);
+        this.showAlertSelected = this.showAlertSelected.bind(this);
+        this.callbackSelected = this.callbackSelected.bind(this);
+        this.download_Chapter = this.download_Chapter.bind(this);
+        this._renderPage = this._renderPage.bind(this);
+        this.getNet = this.getNet.bind(this);
+        this._getNextPage = this._getNextPage.bind(this);
+        this._getPrevPage = this._getPrevPage.bind(this);
+        this._clickBoard = this._clickBoard.bind(this);
+        this._SMode_Change = this._SMode_Change.bind(this);
+        this._getChapterUrl = this._getChapterUrl.bind(this);
+        this._getCurrentPage = this._getCurrentPage.bind(this);
+
+        this.initConf();
+    }
+    initConf() {
         DeviceStorage.get('SMode').then(val => {
             if (val !== null) {
                 this.setState({ SMode: val });
@@ -107,11 +119,11 @@ export default class NovelRead extends Component {
         })
     }
 
-    showAlertSelected = () => {
-        this._dia.show("缓存多少章？", ["后面100章", "后面全部"], '#333333', this.callbackSelected);
+    showAlertSelected() {
+        this._dia.show("缓存多少章？", ["后面150章", "后面全部"], '#333333', this.callbackSelected);
     }
     // 回调
-    callbackSelected = (i) => {
+    callbackSelected(i) {
         switch (i) {
             case 0: // 50章
                 InteractionManager.runAfterInteractions(() => {
@@ -126,7 +138,7 @@ export default class NovelRead extends Component {
         }
     }
 
-    download_Chapter = (flag = true) => {//默认是缓存50章
+    download_Chapter(flag = true) {//默认是缓存150章
         let bookChapterLst = `${this.state.currentBook.bookName}_${this.state.currentBook.plantformId}_list`;
 
         DeviceStorage.get(bookChapterLst).then(val => {
@@ -138,7 +150,7 @@ export default class NovelRead extends Component {
                 }
                 i++;
             }
-            let End = flag ? (i >= 100 ? i - 100 : 0) : (0);
+            let End = flag ? (i >= 150 ? i - 150 : 0) : (0);
             allTask = i - End;
             for (let n = End; n < i; n++) {
                 q.push(val[n].key);
@@ -146,20 +158,19 @@ export default class NovelRead extends Component {
         })
     }
 
-    _renderPage = (data, pageID) => {
+    _renderPage(data, pageID) {
         return (
             <Readeitems
-                title={this.state.test.title}
+                title={this.state.currentItem.title}
                 SMode={this.state.SMode}
                 data={data}
                 presPag={Number(pageID) + 1}
                 totalPage={totalPage}
-                /* hintText={this.state.hintText} */
             ></Readeitems>
         );
     }
 
-    getNet = (nurl, direct) => {
+    getNet(nurl, direct) {
         booklist[this.state.currentNum].recordChapter = nurl;
         DeviceStorage.save('booklist', booklist);
         if (this.chapterMap[nurl] === undefined) {
@@ -167,11 +178,10 @@ export default class NovelRead extends Component {
             axios.get(url, {
                 timeout: 8000,
             }).then(Response => {
-                // console.log(Response);
                 this.setState({
-                    test: Response.data,
+                    currentItem: Response.data,
                     loadFlag: false,
-                    Gpag: direct,
+                    goFlag: direct,
                 }, () => {
                     this.chapterMap[nurl] = Response.data;
                     DeviceStorage.save(bookPlant, this.chapterMap);
@@ -180,24 +190,24 @@ export default class NovelRead extends Component {
                 .catch((Error) => {
                     let epp = { title: "网络连接超时啦啦啦啦啦", content: "网络连接超时.", prev: "error", next: "error" }
                     this.setState({
-                        test: epp,
+                        currentItem: epp,
                         loadFlag: false,
-                        Gpag: direct,
+                        goFlag: direct,
                     });
                 }).done();
         } else {
             this.setState({
-                test: this.chapterMap[nurl],
+                currentItem: this.chapterMap[nurl],
                 loadFlag: false,
-                Gpag: direct,
+                goFlag: direct,
             })
 
         }
     }
-    _getNextPage = () => {
-        if (tht.state.test.next.indexOf('.html') !== -1) {//防止翻页越界
+    _getNextPage() {
+        if (tht.state.currentItem.next.indexOf('.html') !== -1) {//防止翻页越界
             tht.setState({ loadFlag: true }, () => {
-                tht.getNet(tht.state.test.next, 1)
+                tht.getNet(tht.state.currentItem.next, 1)
             });
         } else {
             this.refs.toast.show('已经是最后一章。');
@@ -205,17 +215,18 @@ export default class NovelRead extends Component {
         }
         return 0;
     }
-    _getPrevPage = () => {
-        if (tht.state.test.prev.indexOf('.html') !== -1) {//防止翻页越界
+    _getPrevPage() {
+        if (tht.state.currentItem.prev.indexOf('.html') !== -1) {//防止翻页越界
             tht.setState({ loadFlag: true }, () => {
-                tht.getNet(tht.state.test.prev, -1);
+                tht.getNet(tht.state.currentItem.prev, -1);
             });
         } else {
             this.refs.toast.show('已经是第一章。');
         }
     }
-    _clickBoard = () => {
-        let flag = this.state.menuF;
+
+    _clickBoard() {
+        let flag = this.state.isVisible;
         LayoutAnimation.configureNext({
             duration: 200, //持续时间
             create: { // 视图创建
@@ -226,25 +237,25 @@ export default class NovelRead extends Component {
                 type: LayoutAnimation.Types.linear,
             },
         });
-        this.setState({ menuF: !flag });
+        this.setState({ isVisible: !flag });
     }
 
-    _SMode_Change = () => {
+    _SMode_Change() {
         let s = tht.state.SMode;
         tht.setState({ SMode: !s }, () => {
             DeviceStorage.save('SMode', !s);
         });
     }
-    _getChapterUrl = (urln) => {
+    _getChapterUrl(urln) {
         let url = urln;
         this.setState({
             loadFlag: true,
-            menuF: false
+            isVisible: false
         }, () => {
             tht.getNet(url, 1);
         });
     }
-    _getCurrentPage = pag => {
+    _getCurrentPage(pag) {
         pag = pag === 0 ? 1 : pag;
         booklist[this.state.currentNum].recordPage = pag;
         DeviceStorage.save('booklist', booklist);
@@ -253,18 +264,16 @@ export default class NovelRead extends Component {
     render() {
         return (
             <View style={[styles.container, this.state.SMode ? (styles.SunnyMode_container) : (styles.MoonMode_container)]}>
-
                 <StatusBar
                     barStyle="light-content"
-                    hidden={!this.state.menuF}
+                    hidden={!this.state.isVisible}
                     animation={true}
                 ></StatusBar>
 
-                {this.state.menuF ? (
+                {this.state.isVisible ? (
                     <Navigat
                         navigation={this.props.navigation}
                         choose={1}
-
                     />
                 ) : (false)}
 
@@ -274,7 +283,7 @@ export default class NovelRead extends Component {
                     (<ViewPager
                         dataSource={new ViewPager.DataSource({
                             pageHasChanged: (p1, p2) => p1 !== p2
-                        }).cloneWithPages(getContextArr(this.state.test.content, width))}
+                        }).cloneWithPages(getContextArr(this.state.currentItem.content, width))}
                         renderPage={this._renderPage}
                         getNextPage={this._getNextPage}
                         getPrevPage={this._getPrevPage}
@@ -284,10 +293,10 @@ export default class NovelRead extends Component {
                         isLoop={false}
                         autoPlay={false}
                         renderPageIndicator={false}
-                        Gpag={this.state.Gpag} />)}
+                        Gpag={this.state.goFlag} />)}
                 <Toast ref="toast" />
                 <DialogSelected ref={(c) => this._dia = c} />
-                {this.state.menuF ? (
+                {this.state.isVisible ? (
                     <Navigat
                         urlx={this.state.currentBook.url}
                         currentChapter={this.state.currentBook.recordChapter}

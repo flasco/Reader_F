@@ -9,10 +9,13 @@ const { height, width } = Dimensions.get('window');
  * 这个是自定义的StackNavigator导航栏
  * 用在了NovelRead.js中
  */
-
 export default class Navigat extends Component {
     constructor(props) {
         super(props);
+
+        this.DoCache = this.DoCache.bind(this);
+        this.JmptoChapterList = this.JmptoChapterList.bind(this);
+
         that = this;
     }
 
@@ -20,11 +23,11 @@ export default class Navigat extends Component {
         return false;
     }
 
-    DoCache = () => {
+    DoCache() {
         this.props.showAlertSelected();
-
     }
-    JmptoChapterList = () => {
+
+    JmptoChapterList() {
         this.props.navigation
             .navigate('ChaL', {
                 url: this.props.urlx,
@@ -33,7 +36,6 @@ export default class Navigat extends Component {
                 chap: this.props.currentChapter,
                 callback: (url) => this.props.getChapterUrl(url)
             });
-
     }
 
     render() {
@@ -62,7 +64,7 @@ export default class Navigat extends Component {
                             name="burst"
                             size={20}
                             color={'#fff'}
-                            style={{ textAlign: 'center' }} />
+                            style={styles.fontCenter} />
                         <Text style={styles.FotterItems}>切换</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ flex: 1 }} onPress={this.JmptoChapterList}>
@@ -70,7 +72,7 @@ export default class Navigat extends Component {
                             name="list"
                             size={20}
                             color={'#fff'}
-                            style={{ textAlign: 'center' }} />
+                            style={styles.fontCenter} />
                         <Text style={styles.FotterItems}>目录</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ flex: 1 }} onPress={() => { this.DoCache() }}>
@@ -78,7 +80,7 @@ export default class Navigat extends Component {
                             name="download"
                             size={20}
                             color={'#fff'}
-                            style={{ textAlign: 'center' }} />
+                            style={styles.fontCenter} />
                         <Text style={styles.FotterItems}>缓存</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ flex: 1 }} onPress={() => { alert('coming soon...') }}>
@@ -86,7 +88,7 @@ export default class Navigat extends Component {
                             name="widget"
                             size={20}
                             color={'#fff'}
-                            style={{ textAlign: 'center' }} />
+                            style={styles.fontCenter} />
                         <Text style={styles.FotterItems}>设置</Text>
                     </TouchableOpacity>
                 </View>
@@ -118,6 +120,9 @@ const styles = StyleSheet.create({
     },
     Topper: {
         color: '#FFF', textAlign: 'center', marginTop: 12, fontSize: 16,
+    },
+    fontCenter:{
+        textAlign: 'center',
     },
     FotterItems: {
         color: "#fff", textAlign: 'center', fontSize: 12,

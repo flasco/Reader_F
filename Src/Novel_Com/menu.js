@@ -4,21 +4,25 @@ import React from 'react';
 const window = Dimensions.get('window');
 
 export default class Menu extends React.PureComponent {
-    leanMore = () => {
+    constructor(props) {
+        super(props);
+        this.leanMore = this.leanMore.bind(this);
+        this.CleanData = this.CleanData.bind(this);
+    }
+    leanMore() {
         const sturl = 'http://testdb.leanapp.cn/start?h=6';//运转6小时
         fetch(sturl).then(res => {
-            // console.log(res);
             alert('Server will run for 6 hours');
         }).catch((Error) => {
             // console.warn(Error);
         }).done();
     }
 
-    shouldComponentUpdate(nextProps,nextState){
+    shouldComponentUpdate(nextProps, nextState) {
         return nextProps.data !== this.props.data;
     }
 
-    CleanData = () => {
+    CleanData() {
         alert('除书架记录之外的数据已经全部清空');
         let booklist;
         DeviceStorage.get('booklist').then(val => {
@@ -36,7 +40,7 @@ export default class Menu extends React.PureComponent {
         const { navigate } = this.props.navigation;
         return (
             <View style={styles.menu}>
-                <TouchableOpacity onPress={() => 
+                <TouchableOpacity onPress={() =>
                     navigate('Sear', { addBook: this.props.addBook })
                 }>
                     <Text style={styles.item} >Search</Text>
@@ -50,9 +54,6 @@ export default class Menu extends React.PureComponent {
                 <TouchableOpacity onPress={this.CleanData}>
                     <Text style={styles.item} >CleanAllData</Text>
                 </TouchableOpacity>
-
-
-
             </View>
         );
     }

@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, ListView, TextInput, TouchableOpacity, Alert, InteractionManager } from 'react-native';
 import React, { Component } from 'react';
 
-import Toast, { DURATION } from 'react-native-easy-toast'
 var UrlId = [
     '23us',
     'qidian',
@@ -12,12 +11,18 @@ var UrlId = [
     'qu.la',
     'xs.la',
 ]
+
 export default class SearchBook extends Component {
     constructor(props) {
         super(props);
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
+
+        this._renderRow = this._renderRow.bind(this);
+        this.SearchBook = this.SearchBook.bind(this);
+        this._pressFunc = this._pressFunc.bind(this);
+        this._renderSeparator = this._renderSeparator.bind(this);
 
         this.state = {
             text: '',
@@ -26,16 +31,8 @@ export default class SearchBook extends Component {
         };
     }
 
-    _renderRow = (rowData, sectionID, rowID) => {
-        return (
-            <Text>{rowData}</Text>
-        )
-    }
-
-
-    SearchBook = (text) => {
+    SearchBook(text) {
         let url = `http://testdb.leanapp.cn/sear?name=${text}`;
-
         axios.get(url, { timeout: 5000 }).then(Response => {
             let data = Response.data;
             if (data === 'error...') {
@@ -52,36 +49,26 @@ export default class SearchBook extends Component {
         })
     }
 
-    addBook = (data) => {
-        console.log(data);
-        let book = {
-            bookName: data.name,
-            author: data.author,
-            url: data.url,
-            recordChapter: '',
-            latestChapter: '待检测',
-            recordPage: 1,
-            plantformId: data.plantFormId,
-        };
-
-
+    _pressFunc(rowData) {
+        Alert.alert(
+            null,
+            `你要把[${rowData.name}]添加到书架中吗？`,
+            [
+                {
+                    text: 'Yes', onPress: () => InteractionManager.runAfterInteractions(() => {
+                        this.props.navigation.state.params.addBook(rowData);
+                    })
+                },
+                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+            ],
+            { cancelable: false });
     }
 
-    _renderRow = (rowData, sectionID, rowID) => {
+    _renderRow(rowData, sectionID, rowID) {
         const { navigate } = this.props.navigation;
         return (
             <TouchableOpacity
-                onPress={() => {
-                    Alert.alert(
-                        null,
-                        `你要把[${rowData.name}]添加到书架中吗？`,
-                        [
-                            { text: 'Yes', onPress: () => InteractionManager.runAfterInteractions(() => { this.props.navigation.state.params.addBook(rowData) }) },
-                            { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-                        ],
-                        { cancelable: false })
-                }
-                }>
+                onPress={() => { this._pressFunc(rowData) }}>
                 <View style={{
                     height: 52
                 }}>
@@ -93,12 +80,11 @@ export default class SearchBook extends Component {
         );
     }
 
-    _renderSeparator = () => {
+    _renderSeparator() {
         return (<View style={styles.solid} />);
     }
 
     render() {
-        // const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
                 <TextInput
@@ -124,7 +110,6 @@ export default class SearchBook extends Component {
                     renderSeparator={this._renderSeparator}
                     renderRow={this._renderRow}
                     enableEmptySections={true} />
-                <Toast ref="toast" />
             </View>
         );
     }

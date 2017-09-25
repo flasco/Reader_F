@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
-    StyleSheet,Text, View,ListView,TouchableOpacity, 
-    StatusBar,InteractionManager
+    StyleSheet, Text, View, ListView, TouchableOpacity,
+    StatusBar, InteractionManager
 } from 'react-native';
 
 import SideMenu from 'react-native-side-menu';
@@ -19,9 +19,7 @@ export default class BookPackage extends Component {
     static navigationOptions = ({ navigation }) => {
         return {
             title: '古意流苏',
-            //左上角的返回键文字, 默认是上一个页面的title  IOS 有效
             headerBackTitle: ' ',
-            //导航栏的style
             headerStyle: {
                 backgroundColor: '#000'
             },
@@ -46,13 +44,16 @@ export default class BookPackage extends Component {
     constructor(props) {
         super(props);
         tht = this;
+        this._OpenMenu = this._OpenMenu.bind(this);
+        this._addBook = this._addBook.bind(this);
+
         this.state = {
             load: true,
             isOpen: false,
         };
     }
 
-    _OpenMenu = () => {
+    _OpenMenu() {
         this.setState({ isOpen: true })
     }
 
@@ -62,8 +63,7 @@ export default class BookPackage extends Component {
         })
     }
 
-    _addBook = (data) => {
-        // console.log(data);
+    _addBook(data) {
         let book = {
             bookName: data.name,
             author: data.author,
@@ -110,12 +110,18 @@ class BookList extends Component {
             rowHasChanged: (r1, r2) => r1 !== r2
         });
         tha = this;
+        this.deleteBook = this.deleteBook.bind(this);
+        this._renderRow = this._renderRow.bind(this);
+        this._onRefresh = this._onRefresh.bind(this);
+        this._renderSeparator = this._renderSeparator.bind(this);
+
         this.state = {
             dataSource: '',
             load: true,
         };
+        
         DeviceStorage.get('booklist').then(val => {
-            if (val === null || val.length===0 ) {
+            if (val === null || val.length === 0) {
                 booklist = [
                     {
                         bookName: '美食供应商',
@@ -142,9 +148,7 @@ class BookList extends Component {
                     load: false
                 });
             } else {
-                // console.log('have');
                 booklist = val;
-
                 this.setState({
                     dataSource: ds.cloneWithRows(val),
                     load: false
@@ -156,8 +160,8 @@ class BookList extends Component {
         SplashScreen.hide();
     }
 
-    ontest = (r) => {
-        booklist.splice(r, 1);
+    deleteBook(deleteId) {
+        booklist.splice(deleteId, 1);
         this.setState({
             dataSource: new ListView.DataSource({
                 rowHasChanged: (r1, r2) => r1 !== r2
@@ -167,14 +171,14 @@ class BookList extends Component {
         })
     }
 
-    _renderRow = (rowData, sectionID, rowID) => {
+    _renderRow(rowData, sectionID, rowID) {
         const { navigate } = this.props.navigation;
         return (
             <Swipeout right={
                 [{
                     text: '删除',
                     onPress: () => {
-                        this.ontest(rowID)
+                        this.deleteBook(rowID)
                     },
                     backgroundColor: 'red',
                 }]
@@ -198,16 +202,15 @@ class BookList extends Component {
                             <Text style={{ fontSize: 15, }}>{rowData.bookName}</Text>
                             <Text style={styles.latestChapter}>{`    ${rowData.latestChapter}`}</Text>
                         </Text>
-
                     </View>
                 </TouchableOpacity>
             </Swipeout >
         );
     }
-    _renderSeparator = () => {
+    _renderSeparator() {
         return (<View style={styles.solid} />);
     }
-    _onRefresh = (PullRefresh) => {
+    _onRefresh(PullRefresh) {
         getNet.refreshChapter(booklist, () => {
             RefreshCount++;
             if (RefreshCount != booklist.length) return;

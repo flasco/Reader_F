@@ -5,6 +5,6 @@
  */
 
 import { AppRegistry } from 'react-native';
-import Reader_F from './Reader_F'
+import Reader_F from './Src/Reader_F'
 
 AppRegistry.registerComponent('Reader_F', () => Reader_F);
