@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ListView, TextInput, TouchableOpacity, Alert, InteractionManager } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Alert, InteractionManager } from 'react-native';
 import React, { Component } from 'react';
 
 var UrlId = [
@@ -18,9 +18,6 @@ var UrlId = [
 export default class SearchBook extends Component {
     constructor(props) {
         super(props);
-        const ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2
-        });
 
         this._renderRow = this._renderRow.bind(this);
         this.SearchBook = this.SearchBook.bind(this);
@@ -32,6 +29,18 @@ export default class SearchBook extends Component {
             dataSource: '',
             hint: '输入后点击 done 即可搜索书籍。',
         };
+    }
+
+    componentDidMount() {
+        let bookNam = this.props.navigation.state.params.bookNam||'';
+        console.log(bookNam);
+        if(bookNam !== ''){
+            this.setState({
+                text:bookNam,
+            },()=>{
+                this.SearchBook(bookNam)
+            })
+        }
     }
 
     SearchBook(text) {
@@ -62,12 +71,13 @@ export default class SearchBook extends Component {
                         this.props.navigation.state.params.addBook(rowData);
                     })
                 },
-                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                { text: 'Cancel', onPress: () =>{}, style: 'cancel' },
             ],
             { cancelable: false });
     }
 
-    _renderRow(rowData, sectionID, rowID) {
+    _renderRow(item) {
+        let rowData = item.item;
         const { navigate } = this.props.navigation;
         return (
             <TouchableOpacity
@@ -87,6 +97,8 @@ export default class SearchBook extends Component {
         return (<View style={styles.solid} />);
     }
 
+    _keyExtractor = (item, index) => item.url;
+
     render() {
         return (
             <View style={styles.container}>
@@ -103,16 +115,15 @@ export default class SearchBook extends Component {
                     }}
                     value={this.state.text} />
                 <Text style={styles.hint}>{this.state.hint}</Text>
-                <ListView
+                    <FlatList
                     style={{
                         flex: 1
                     }}
-                    dataSource={new ListView.DataSource({
-                        rowHasChanged: (r1, r2) => r1 !== r2
-                    }).cloneWithRows(this.state.dataSource)}
-                    renderSeparator={this._renderSeparator}
-                    renderRow={this._renderRow}
-                    enableEmptySections={true} />
+                    data={this.state.dataSource}
+                    renderItem={this._renderRow}
+                    ItemSeparatorComponent={this._renderSeparator}
+                    getItemLayout={(data, index) => ({ length: 52, offset: 53 * index, index })}//行高38，分割线1，所以offset=39
+                    keyExtractor={this._keyExtractor}/>
             </View>
         );
     }
