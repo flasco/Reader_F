@@ -22,6 +22,10 @@ var DefaultViewPageIndicator = require('./DefaultViewPageIndicator');
 var deviceWidth = Dimensions.get('window').width;
 var ViewPagerDataSource = require('./ViewPagerDataSource');
 
+//私人定制
+const LeftBoundary = deviceWidth / 4;
+const RightBoundary = deviceWidth - LeftBoundary;
+
 var ViewPager = React.createClass({
   mixins: [TimerMixin],
 
@@ -56,7 +60,8 @@ var ViewPager = React.createClass({
           {
             toValue: toValue,
             duration: 180,
-            easing: Easing.linear
+            easing: Easing.linear,
+            useNativeDriver: true,//使用原生驱动，更加流畅
           });
       },
     };
@@ -92,20 +97,28 @@ var ViewPager = React.createClass({
        */
       let clickX = gestureState.x0;
       let moveX = gestureState.dx;
-      let flag = gestureState.moveX > gestureState.x0 ? 0 : 1;
-      if(clickX>280 && moveX == 0 || flag === 1){
+      let flag = gestureState.moveX === 0 ? 0 : ( gestureState.moveX > gestureState.x0 ? -1 : 1 ) ;
+      // if(gestureState.moveX === 0){//点击事件
+      //   // console.log(gestureState.moveX +' '+gestureState.x0);
+      //   flag = 0;
+      // }else{
+      //   flag = gestureState.moveX > gestureState.x0 ? -1 : 1;
+      // }
+
+
+      if(clickX> RightBoundary && moveX == 0 || flag === 1){
         this.props.hasTouch && this.props.hasTouch(false);
         this.setState({toprev:0},()=>{
           this.movePage(1, gestureState,moveX !== 0);//moveX !== 0 这里是判断是否启用动画效果
           return ;
         });
-      }else if(clickX<90 && moveX == 0 || flag === 0){
+      }else if(clickX< LeftBoundary && moveX == 0 || flag === -1){
         this.props.hasTouch && this.props.hasTouch(false);
         this.setState({toprev:1},()=>{
           this.movePage(-1, gestureState,moveX !== 0);
           return ;
         });
-      }else if( clickX>90 && clickX<280 && moveX ==0){
+      }else if( clickX> LeftBoundary && clickX< RightBoundary  && moveX ==0){
          this.props.clickBoard();//可以在这里做文章，在打开菜单的时候屏蔽一切滑动操作
          return ;
       }
