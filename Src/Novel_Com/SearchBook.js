@@ -10,7 +10,7 @@ var UrlId = [
     'kanshuz',
     'qu.la',
     'xs.la',
-]
+];
 /**
  * 搜索模块
  - code by Czq
@@ -38,8 +38,8 @@ export default class SearchBook extends Component {
             this.setState({
                 text:bookNam,
             },()=>{
-                this.SearchBook(bookNam)
-            })
+                this.SearchBook(bookNam);
+            });
         }
     }
 
@@ -58,7 +58,7 @@ export default class SearchBook extends Component {
                     hint: `搜索到${data.length}条相关数据。`
                 });
             }
-        })
+        });
     }
 
     _pressFunc(rowData) {
@@ -81,7 +81,7 @@ export default class SearchBook extends Component {
         const { navigate } = this.props.navigation;
         return (
             <TouchableOpacity
-                onPress={() => { this._pressFunc(rowData) }}>
+                onPress={() => { this._pressFunc(rowData); }}>
                 <View style={{
                     height: 52
                 }}>

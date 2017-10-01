@@ -41,7 +41,7 @@ export default class RnkList extends Component {
                     FooterText:'上拉加载',
                 });
             }
-        })
+        });
     }
 
     JmpToBook(nam){
@@ -56,7 +56,7 @@ export default class RnkList extends Component {
         let rowData = item.item;
         return (
             <TouchableOpacity
-                onPress={() => { tht.JmpToBook(rowData.name) }}>
+                onPress={() => { tht.JmpToBook(rowData.name); }}>
                 <View style={{
                     height: 70
                 }}>
@@ -82,7 +82,7 @@ export default class RnkList extends Component {
             fetchFlag:true,
         },()=>{
             this.getNet(currentPag++);
-        })
+        });
     }
 
     _footer = () => {

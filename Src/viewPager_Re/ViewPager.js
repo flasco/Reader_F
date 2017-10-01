@@ -12,6 +12,7 @@ var {
   PanResponder,
   Animated,
   StyleSheet,
+  Easing,
 } = ReactNative;
 
 var StaticRenderer = require('react-native/Libraries/Components/StaticRenderer');
@@ -20,8 +21,6 @@ var TimerMixin = require('react-timer-mixin');
 var DefaultViewPageIndicator = require('./DefaultViewPageIndicator');
 var deviceWidth = Dimensions.get('window').width;
 var ViewPagerDataSource = require('./ViewPagerDataSource');
-
-// var initf = 0;
 
 var ViewPager = React.createClass({
   mixins: [TimerMixin],
@@ -53,14 +52,14 @@ var ViewPager = React.createClass({
       isLoop: false,
       locked: false,
       animation: function(animate, toValue, gs) {
-        return Animated.spring(animate,
+        return Animated.timing(animate,
           {
             toValue: toValue,
-            friction: 10,
-            tension: 50,
-          })
+            duration: 180,
+            easing: Easing.linear
+          });
       },
-    }
+    };
   },
 
   getInitialState() {
@@ -76,11 +75,9 @@ var ViewPager = React.createClass({
 
   componentWillMount() {
     this.childIndex = 0;
-    // console.log(this.props.dataSource)
     this.maxP = this.props.dataSource.getPageCount();
     var release = (e, gestureState) => {
       var relativeGestureDistance = gestureState.dx / deviceWidth,
-          //lastPageIndex = this.props.children.length - 1,
           vx = gestureState.vx;
 
       var step = 0;
@@ -89,53 +86,58 @@ var ViewPager = React.createClass({
       } else if (relativeGestureDistance > 0.5 || (relativeGestureDistance > 0 && vx >= 1e-6)) {
         step = -1;
       }
+      /**
+       *   x0 是x轴的起始位置
+       *   moveX 是x轴的结束滑动位置，如果没滑就是0
+       */
       let clickX = gestureState.x0;
       let moveX = gestureState.dx;
-      if(clickX>280 && moveX == 0){
+      let flag = gestureState.moveX > gestureState.x0 ? 0 : 1;
+      if(clickX>280 && moveX == 0 || flag === 1){
         this.props.hasTouch && this.props.hasTouch(false);
         this.setState({toprev:0},()=>{
-          this.movePage(1, gestureState,false);
+          this.movePage(1, gestureState,moveX !== 0);//moveX !== 0 这里是判断是否启用动画效果
           return ;
         });
-      }else if(clickX<90 && moveX == 0){
+      }else if(clickX<90 && moveX == 0 || flag === 0){
         this.props.hasTouch && this.props.hasTouch(false);
         this.setState({toprev:1},()=>{
-          this.movePage(-1, gestureState,false);
+          this.movePage(-1, gestureState,moveX !== 0);
           return ;
         });
       }else if( clickX>90 && clickX<280 && moveX ==0){
-         this.props.clickBoard();
+         this.props.clickBoard();//可以在这里做文章，在打开菜单的时候屏蔽一切滑动操作
          return ;
       }
 
       this.props.hasTouch && this.props.hasTouch(false);
 
       this.movePage(step, gestureState);
-    }
+    };
 
+    
     this._panResponder = PanResponder.create({
       // Claim responder if it's a horizontal pan
       onStartShouldSetPanResponder: (evt, gestureState) => true,
       onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
       onMoveShouldSetPanResponder: (e, gestureState) => {
-        
-
         if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) {
-          if (/* (gestureState.moveX <= this.props.edgeHitWidth ||
-              gestureState.moveX >= deviceWidth - this.props.edgeHitWidth) && */
-                this.props.locked !== true && !this.fling) {
+          
+          if (this.props.locked !== true && !this.fling) {
+              
             this.props.hasTouch && this.props.hasTouch(true);
+            
             return true;
           }
         }
       },
 
-
+      
       // Touch is released, scroll to the one that you're closest to
        onPanResponderRelease: release,
       
       onPanResponderTerminate: release,
-
+      
       // Dragging, move the view with the touch
       onPanResponderMove: (e, gestureState) => {
         var dx = gestureState.dx;
@@ -164,7 +166,7 @@ var ViewPager = React.createClass({
       if(this.props.Gpag==1){
         this.goToPage(0, false);
       }else if(this.props.Gpag==-1){
-        this.goToPage(this.maxP-1, false)
+        this.goToPage(this.maxP-1, false);
       }
   },
 
@@ -222,7 +224,7 @@ var ViewPager = React.createClass({
     // console.log('pageNumber:'+pageNumber+'    pageCount:'+pageCount);
     if (pageNumber < 0 || pageNumber > pageCount) {
       // console.error('Invalid page number: ', pageNumber);
-      return
+      return;
     }
 
     var step = pageNumber - this.state.currentPage;

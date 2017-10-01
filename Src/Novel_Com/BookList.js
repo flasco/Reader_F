@@ -27,7 +27,7 @@ export default class BookPackage extends Component {
                 backgroundColor: '#000'
             },
             headerRight: (
-                <TouchableOpacity onPress={() => { tht._OpenMenu() }}>
+                <TouchableOpacity onPress={() => { tht._OpenMenu(); }}>
                     <Icon
                         name="plus"
                         size={30}
@@ -57,13 +57,13 @@ export default class BookPackage extends Component {
     }
 
     _OpenMenu() {
-        this.setState({ isOpen: true })
+        this.setState({ isOpen: true });
     }
 
     updateMenuState(isOpen) {
         this.setState({
             isOpen: isOpen,
-        })
+        });
     }
 
     _addBook(data) {
@@ -148,7 +148,7 @@ class BookList extends Component {
                         plantformId: 5,
                     }
                 ];
-                alert('发现书架为空，自动添加书籍。')
+                alert('发现书架为空，自动添加书籍。');
                 DeviceStorage.save('booklist', booklist);
                 this.setState({
                     dataSource: ds.cloneWithRows(booklist),
@@ -175,7 +175,7 @@ class BookList extends Component {
             }).cloneWithRows(booklist)
         }, () => {
             DeviceStorage.save('booklist', booklist);
-        })
+        });
     }
 
     _renderRow(rowData, sectionID, rowID) {
@@ -185,7 +185,7 @@ class BookList extends Component {
                 [{
                     text: '删除',
                     onPress: () => {
-                        this.deleteBook(rowID)
+                        this.deleteBook(rowID);
                     },
                     backgroundColor: 'red',
                 }]
@@ -198,7 +198,7 @@ class BookList extends Component {
                     onPress={() => {
                         navigate('Read', {
                             bookNum: booklist.indexOf(rowData),
-                        })
+                        });
                     }}>
                     <View style={{
                         height: 52
@@ -227,7 +227,7 @@ class BookList extends Component {
                 RefreshCount = 0;
                 DeviceStorage.save('booklist', booklist);
                 PullRefresh.onRefreshEnd();
-            })
+            });
         });
     }
     render() {

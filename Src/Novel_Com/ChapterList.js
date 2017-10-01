@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button } from 'react-native';
-import urlTool from 'url'
+import urlTool from 'url';
 var ChapterList, booklist;
 /**
  * 书籍目录
@@ -78,7 +78,7 @@ export default class NovelList extends Component {
                     that._FlatList.scrollToIndex({ viewPosition: 0.5, index: inx });
                 }, 100);
             });
-        })
+        });
     }
 
     getNet(nurl, callback) {
@@ -144,7 +144,7 @@ export default class NovelList extends Component {
     _renderSeparator() {
         return (
             <View style={styles.solid} />
-        )
+        );
     }
 
     render() {

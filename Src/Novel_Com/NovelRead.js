@@ -24,7 +24,7 @@ q.drain = function () {
     tht.refs.toast.show(`Task finished at ${finishTask}/${allTask}`);
     finishTask = 0;
     DeviceStorage.save(bookPlant, tht.chapterMap);
-}
+};
 
 function fetchList(nurl, callback) {
     let n = 100 * (finishTask / allTask) >> 0; //取整
@@ -119,16 +119,16 @@ export default class NovelRead extends Component {
                 }).then(() => {
                     this.getNet(this.state.currentBook.recordChapter, 0);
                     booklist[this.state.currentNum].recordPage = 1;//修复进入章节后从目录进入新章节页数记录不正确的bug
-                })
+                });
             } else {
                 this.getNet(this.state.currentBook.recordChapter, 0);
                 booklist[this.state.currentNum].recordPage = 1;//修复进入章节后从目录进入新章节页数记录不正确的bug
             }
-        })
+        });
     }
 
     showAlertSelected() {
-        this._dia.show("缓存多少章？", ["后面150章", "后面全部"], '#333333', this.callbackSelected);
+        this._dia.show('缓存多少章？', ['后面150章', '后面全部'], '#333333', this.callbackSelected);
     }
     // 回调
     callbackSelected(i) {
@@ -163,7 +163,7 @@ export default class NovelRead extends Component {
             for (let n = End; n < i; n++) {
                 q.push(val[n].key);
             }
-        })
+        });
     }
 
     _renderPage(data, pageID) {
@@ -196,7 +196,7 @@ export default class NovelRead extends Component {
                 });
             })
                 .catch((Error) => {
-                    let epp = { title: "网络连接超时啦啦啦啦啦", content: "网络连接超时.", prev: "error", next: "error" }
+                    let epp = { title: '网络连接超时啦啦啦啦啦', content: '网络连接超时.', prev: 'error', next: 'error' };
                     this.setState({
                         currentItem: epp,
                         loadFlag: false,
@@ -208,14 +208,14 @@ export default class NovelRead extends Component {
                 currentItem: this.chapterMap[nurl],
                 loadFlag: false,
                 goFlag: direct,
-            })
+            });
 
         }
     }
     _getNextPage() {
         if (tht.state.currentItem.next.indexOf('.html') !== -1) {//防止翻页越界
             tht.setState({ loadFlag: true }, () => {
-                tht.getNet(tht.state.currentItem.next, 1)
+                tht.getNet(tht.state.currentItem.next, 1);
             });
         } else {
             this.refs.toast.show('已经是最后一章。');
