@@ -66,7 +66,7 @@ const Reader_F = StackNavigator({
     }
   });
 
-  export default () => <Reader_F />;
+  export default Reader_F;
 
 const styles = StyleSheet.create({
   container: {

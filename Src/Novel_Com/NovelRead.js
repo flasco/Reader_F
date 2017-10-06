@@ -14,7 +14,7 @@ import Navigat from './items/Navigat';
  * 下载模块
  - code by Czq
  */
-var q = async.queue(function (url, callback) {
+let q = async.queue(function (url, callback) {
     fetchList(url, () => {
         callback(null);
     });
@@ -46,9 +46,9 @@ function fetchList(nurl, callback) {
     }
 }
 
-var allTask = 0, finishTask = 0;
+let allTask = 0, finishTask = 0;
 
-var tht, bookPlant, booklist;
+let tht, bookPlant, booklist;
 
 const { height, width } = Dimensions.get('window');
 
@@ -244,6 +244,10 @@ export default class NovelRead extends Component {
             update: { // 视图更新
                 type: LayoutAnimation.Types.linear,
             },
+            delete:{
+                type: LayoutAnimation.Types.linear,
+                property: LayoutAnimation.Properties.opacity,// opacity
+              }
         });
         this.setState({ isVisible: !flag });
     }
@@ -278,12 +282,11 @@ export default class NovelRead extends Component {
                     animation={true}
                 ></StatusBar>
 
-                {this.state.isVisible ? (
+                {this.state.isVisible&&
                     <Navigat
                         navigation={this.props.navigation}
                         choose={1}
-                    />
-                ) : (false)}
+                    />}
 
                 {this.state.loadFlag ? (
                     <Text style={[styles.centr, this.state.SMode ? (false) : (styles.MoonMode_text)]}>
@@ -298,13 +301,11 @@ export default class NovelRead extends Component {
                         getCurrentPage={this._getCurrentPage}
                         clickBoard={this._clickBoard}
                         initialPage={booklist[this.state.currentNum].recordPage - 1}
-                        isLoop={false}
-                        autoPlay={false}
-                        renderPageIndicator={false}
+                        locked={this.state.isVisible}
                         Gpag={this.state.goFlag} />)}
                 <Toast ref="toast" />
                 <DialogSelected ref={(c) => this._dia = c} />
-                {this.state.isVisible ? (
+                {this.state.isVisible &&
                     <Navigat
                         urlx={this.state.currentBook.url}
                         currentChapter={this.state.currentBook.recordChapter}
@@ -315,8 +316,7 @@ export default class NovelRead extends Component {
                         showAlertSelected={this.showAlertSelected}
                         SModeChange={this._SMode_Change}
                         choose={2}
-                    />
-                ) : (false)}
+                    />}
             </View>
         );
     }

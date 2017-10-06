@@ -48,10 +48,14 @@ function parseContent(str, width, cleanEmptyLine = true) {
         currentLineWidth = 0;
         continue;
       }
-      if(code == 8220 ||code == 8221){
-        s = `"`;
-      }else if(code == 8216 || code == 8217){
-        s = `'`;
+      if (code == 8220 || code == 8221) {
+        s = '"';
+      }else if (code == 8216 || code == 8217) {
+        s = '\'';
+      }
+
+      if(code >= 48 && code <= 56 || code >= 65 && code <= 91 || code >= 97 && code <= 122){
+        s = String.fromCharCode(code + 65248);  //宽字符的数字、大小写字母转换
       }
       
       var sWidth = stringWidth(s);
