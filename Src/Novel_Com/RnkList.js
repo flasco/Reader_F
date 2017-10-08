@@ -49,6 +49,7 @@ export default class RnkList extends Component {
         const { navigate } = this.props.navigation;
         navigate('Sear', {
             bookNam:nam,
+            addBook:this.props.navigation.state.params.addBook
         });
     }
 

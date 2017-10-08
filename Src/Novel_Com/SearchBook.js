@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Alert, InteractionManager } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, AlertIOS, InteractionManager } from 'react-native';
 import React, { Component } from 'react';
 
 var UrlId = [
@@ -62,18 +62,16 @@ export default class SearchBook extends Component {
     }
 
     _pressFunc(rowData) {
-        Alert.alert(
-            null,
-            `你要把[${rowData.name}]添加到书架中吗？`,
-            [
-                {
-                    text: 'Yes', onPress: () => InteractionManager.runAfterInteractions(() => {
-                        this.props.navigation.state.params.addBook(rowData);
-                    })
-                },
-                { text: 'Cancel', onPress: () =>{}, style: 'cancel' },
-            ],
-            { cancelable: false });
+        AlertIOS.alert('提示', `你要把[${rowData.name}]添加到书架中吗？`, [
+            {
+              text: '取消',
+              onPress: ()=>{ }
+            },
+            {
+              text: '确认',
+              onPress: () => this.props.navigation.state.params.addBook(rowData)
+            },
+          ]);
     }
 
     _renderRow(item) {

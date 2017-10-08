@@ -49,7 +49,7 @@ export default class Menu extends React.PureComponent {
                 }>
                     <Text style={styles.item} >Search</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { navigate('RnkL'); }}>
+                <TouchableOpacity onPress={() => { navigate('RnkL',{addBook:this.props.addBook}); }}>
                     <Text style={styles.item} >RankList</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this.leanMore}>

@@ -23,9 +23,9 @@ export default class AlertSelected extends Component {
     this.state = {
       offset: new Animated.Value(0),
       opacity: new Animated.Value(0),
-      title: "",
-      choose0: "",
-      choose1: "",
+      title: '',
+      choose0: '',
+      choose1: '',
       hide: true,
       tipTextColor: '#333333',
       aHeight: 236,
@@ -53,8 +53,8 @@ export default class AlertSelected extends Component {
                 bottom: - 20,
               },
             }),
-            alignItems: "center",
-            justifyContent: "space-between",
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }, {
             transform: [{
               translateY: this.state.offset.interpolate({
@@ -96,7 +96,7 @@ export default class AlertSelected extends Component {
             <Text style={{
               color: this.state.tipTextColor,
               fontSize: 17,
-              textAlign: "center",
+              textAlign: 'center',
             }}>{item}</Text>
           </View>
         </TouchableOpacity>
@@ -201,7 +201,7 @@ export default class AlertSelected extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
+    position: 'absolute',
     width: width,
     height: height,
     left: left,
@@ -209,10 +209,10 @@ const styles = StyleSheet.create({
     zIndex: 22,
   },
   mask: {
-    justifyContent: "center",
-    backgroundColor: "#000000",
+    justifyContent: 'center',
+    backgroundColor: '#000000',
     opacity: 0.3,
-    position: "absolute",
+    position: 'absolute',
     width: width,
     height: height,
     left: left,
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   },
   // 提示文字
   tipTitleText: {
-    color: "#999999",
+    color: '#999999',
     fontSize: 14,
   },
   // 分割线
@@ -258,8 +258,8 @@ const styles = StyleSheet.create({
   // 取消按钮
   buttonText: {
     fontSize: 17,
-    color: "#0084ff",
-    textAlign: "center",
+    color: '#0084ff',
+    textAlign: 'center',
   },
   content: {
     backgroundColor: '#fff',
