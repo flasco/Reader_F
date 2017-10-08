@@ -1,48 +1,27 @@
-'use strict';
-
-//var warning = require('warning');
-
-function defaultGetPageData(
-  dataBlob: any,
-  pageID: number | string,
-): any {
-  return dataBlob[pageID];
-}
-
-type differType = (data1: any, data2: any) => bool;
-
-type ParamType = {
-  pageHasChanged: differType;
-  getPageData: ?typeof defaultGetPageData;
-}
-
 class ViewPagerDataSource {
-
-  constructor(params: ParamType) {
+  
+  constructor(params) {
     this._getPageData = params.getPageData || defaultGetPageData;
     this._pageHasChanged = params.pageHasChanged;
-
+  
     this.pageIdentities = [];
   }
-
-  cloneWithPages(
-      dataBlob: any,
-      pageIdentities: ?Array<string>,
-  ): ViewPagerDataSource {
-
+  
+  cloneWithPages( dataBlob, pageIdentities ) {
+  
     var newSource = new ViewPagerDataSource({
       getPageData: this._getPageData,
       pageHasChanged: this._pageHasChanged,
     });
-
+  
     newSource._dataBlob = dataBlob;
-
+  
     if (pageIdentities) {
       newSource.pageIdentities = pageIdentities;
     } else {
       newSource.pageIdentities = Object.keys(dataBlob);
     }
-
+  
     newSource._cachedPageCount = newSource.pageIdentities.length;
     newSource._calculateDirtyPages(
       this._dataBlob,
@@ -50,25 +29,25 @@ class ViewPagerDataSource {
     );
     return newSource;
   }
-
-  getPageCount(): number {
+  
+  getPageCount() {
     return this._cachedPageCount;
   }
-
+  
   /**
-   * Returns if the row is dirtied and needs to be rerendered
-   */
-  pageShouldUpdate(pageIndex: number): bool {
+     * Returns if the row is dirtied and needs to be rerendered
+     */
+  pageShouldUpdate( pageIndex ) {
     var needsUpdate = this._dirtyPages[pageIndex];
     //    warning(needsUpdate !== undefined,
     //  'missing dirtyBit for section, page: ' + pageIndex);
     return needsUpdate;
   }
-
+  
   /**
-   * Gets the data required to render the page
-   */
-  getPageData(pageIndex: number): any {
+     * Gets the data required to render the page
+     */
+  getPageData( pageIndex ) {
     if (!this.getPageData) {
       return null;
     }
@@ -77,33 +56,21 @@ class ViewPagerDataSource {
     //      'renderPage called on invalid section: ' + pageID);
     return this._getPageData(this._dataBlob,pageID);
   }
-
+  
   /**
-   * Private members and methods.
-   */
-
-  _getPageData: typeof defaultGetPageData;
-  _pageHasChanged: differType;
-
-  _dataBlob: any;
-  _dirtyPages: Array<bool>;
-  _cachedRowCount: number;
-
-  pageIdentities: Array<string>;
-
-  _calculateDirtyPages(
-    prevDataBlob: any,
-    prevPageIDs: Array<string>,
-  ): void {
+     * Private members and methods.
+     */
+  
+  _calculateDirtyPages( prevDataBlob,prevPageIDs ){
     // construct a hashmap of the existing (old) id arrays
     var prevPagesHash = keyedDictionaryFromArray(prevPageIDs);
     this._dirtyPages = [];
-
+  
     var dirty;
     for (var sIndex = 0; sIndex < this.pageIdentities.length; sIndex++) {
       var pageID = this.pageIdentities[sIndex];
       dirty = !prevPagesHash[pageID];
-      var pageHasChanged = this._pageHasChanged
+      var pageHasChanged = this._pageHasChanged;
       if (!dirty && pageHasChanged) {
         dirty = pageHasChanged(
           this._getPageData(prevDataBlob, pageID),
@@ -113,9 +80,13 @@ class ViewPagerDataSource {
       this._dirtyPages.push(!!dirty);
     }
   }
-
+  
 }
-
+  
+function defaultGetPageData( dataBlob,pageID ) {
+  return dataBlob[pageID];
+}
+  
 function keyedDictionaryFromArray(arr) {
   if (arr.length === 0) {
     return {};
@@ -123,10 +94,10 @@ function keyedDictionaryFromArray(arr) {
   var result = {};
   for (var ii = 0; ii < arr.length; ii++) {
     var key = arr[ii];
-    //    warning(!result[key], 'Value appears more than once in array: ' + key);
     result[key] = true;
   }
   return result;
 }
-
-module.exports = ViewPagerDataSource;
+  
+export default ViewPagerDataSource;
+  

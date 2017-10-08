@@ -1,7 +1,4 @@
-'use strict';
-
-import React,{ PropTypes } from 'react';
-
+import React,{ PureComponent } from 'react';
 import {
   Dimensions,
   View,
@@ -12,8 +9,6 @@ import {
 } from 'react-native';
 
 import StaticRenderer from 'react-native/Libraries/Components/StaticRenderer';
-import TimerMixin from 'react-timer-mixin';
-
 import  ViewPagerDataSource from './ViewPagerDataSource';
 
 //私人定制
@@ -22,60 +17,39 @@ const LeftBoundary = deviceWidth / 4;
 const RightBoundary = deviceWidth - LeftBoundary;
 let Shield = 0;//修复呼出菜单之后下一次滑页出现bug
 
-var ViewPager = React.createClass({
-  mixins: [TimerMixin],
-
-  statics: {
-    DataSource: ViewPagerDataSource,
-  },
-
-  propTypes: {
-    ...View.propTypes,
-    dataSource: PropTypes.instanceOf(ViewPagerDataSource).isRequired,
-    renderPage: PropTypes.func.isRequired,
-    onChangePage: PropTypes.func,
-    isLoop: PropTypes.bool,
-    locked: PropTypes.bool,
-    animation: PropTypes.func,
-    initialPage: PropTypes.number,
-  },
-
-  fling: false,
-
-  getDefaultProps() {
-    return {
-      isLoop: false,
-      locked: false,
-      animation: function(animate, toValue, gs) {
-        return Animated.timing(animate,
-          {
-            toValue: toValue,
-            duration: 60,
-            easing: Easing.linear,
-            useNativeDriver: true,//使用原生驱动，更加流畅
-          });
-      },
+class ViewPager extends PureComponent{
+  static DataSource =  ViewPagerDataSource;
+  constructor(props){
+    super(props);
+    this.fling = false;
+    this.isLoop = false;
+    this.locked = false;
+    this.animation = (animate, toValue, gs) =>{
+      return Animated.timing(animate,
+        {
+          toValue: toValue,
+          duration: 60,
+          easing: Easing.linear,
+          useNativeDriver: true,//使用原生驱动，更加流畅
+        });
     };
-  },
-
-  getInitialState() {
-    var maxP ;
-    return {
+    let maxP;
+    this.state = {
       toprev:0,
       currentPage: 0,
       viewWidth: 0,
       scrollValue: new Animated.Value(0)
     };
-  },
+  }
 
   componentWillMount() {
     this.childIndex = 0;
     this.maxP = this.props.dataSource.getPageCount();
-    var release = (e, gestureState) => {
-      var relativeGestureDistance = gestureState.dx / deviceWidth,
+    let release = (e, gestureState) => {
+      let relativeGestureDistance = gestureState.dx / deviceWidth,
         vx = gestureState.vx;
       Shield = Shield >= 2 ? 0 : Shield;
-      var step = 0;
+      let step = 0;
       if (relativeGestureDistance < -0.5 || (relativeGestureDistance < 0 && vx <= -1e-6)) {
         step = 1;
       } else if (relativeGestureDistance > 0.5 || (relativeGestureDistance > 0 && vx >= 1e-6)) {
@@ -142,8 +116,8 @@ var ViewPager = React.createClass({
         if(Shield>=2){
           return;
         }
-        var dx = gestureState.dx;
-        var offsetX = -dx / this.state.viewWidth + this.childIndex;
+        let dx = gestureState.dx;
+        let offsetX = -dx / this.state.viewWidth + this.childIndex;
         this.state.scrollValue.setValue(offsetX);
       },
     });
@@ -153,13 +127,13 @@ var ViewPager = React.createClass({
       this.state.scrollValue.setValue(1);
     }
     // if(initf === 0){
-    var initialPage = Number(this.props.initialPage);
+    let initialPage = Number(this.props.initialPage);
     // initf = 1;
     if (initialPage > 0) {
       this.goToPage(initialPage, false);
     }
     // }
-  },
+  }
 
   componentDidMount() {
     // console.log(this.props.dataSource);
@@ -170,13 +144,13 @@ var ViewPager = React.createClass({
     }else if(this.props.Gpag==-1){
       this.goToPage(this.maxP-1, false);
     }
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.dataSource) {
-      var maxPage = nextProps.dataSource.getPageCount();
+      let maxPage = nextProps.dataSource.getPageCount();
       this.maxP = maxPage;
-      var constrainedPage = Math.max(0, Math.min(this.state.currentPage, maxPage));
+      let constrainedPage = Math.max(0, Math.min(this.state.currentPage, maxPage));
       this.setState({
         currentPage: constrainedPage,
       });
@@ -187,7 +161,7 @@ var ViewPager = React.createClass({
       this.childIndex = 0;
       this.fling = false;
     }
-  },
+  }
 
   goToPage(pageNumber, animate = true) {
     
@@ -198,7 +172,7 @@ var ViewPager = React.createClass({
 
     let step = pageNumber - this.state.currentPage;
     this.movePage(step, null, animate);
-  },
+  }
 
   movePage(step, gs, animate = true) {
     let pageCount = this.maxP;
@@ -240,7 +214,7 @@ var ViewPager = React.createClass({
 
     if (animate) {
       this.fling = true;
-      this.props.animation(this.state.scrollValue, scrollStep, gs)
+      this.animation(this.state.scrollValue, scrollStep, gs)
         .start((event) => {
           if (event.finished) {
             postChange();
@@ -251,15 +225,15 @@ var ViewPager = React.createClass({
       postChange();
       moved && this.props.onChangePage && this.props.onChangePage(pageNumber);
     }
-  },
+  }
 
   getCurrentPage() {
     return this.state.currentPage;
-  },
+  }
 
   _getPage(pageIdx, loop = false ) {
-    var dataSource = this.props.dataSource;
-    var pageID = dataSource.pageIdentities[pageIdx];
+    let dataSource = this.props.dataSource;
+    let pageID = dataSource.pageIdentities[pageIdx];
     return (
       <StaticRenderer
         key={'p_' + pageID + (loop ? '_1' : '')}
@@ -272,17 +246,17 @@ var ViewPager = React.createClass({
         )}
       />
     );
-  },
+  }
 
   render() {
-    var dataSource = this.props.dataSource;
-    var pageIDs = dataSource.pageIdentities;
+    const dataSource = this.props.dataSource;
+    let pageIDs = dataSource.pageIdentities;
 
-    var bodyComponents = [];
+    let bodyComponents = [];
 
-    var pagesNum = 0;
-    var hasLeft = false;
-    var viewWidth = this.state.viewWidth;
+    let pagesNum = 0;
+    let hasLeft = false;
+    let viewWidth = this.state.viewWidth;
 
     if(pageIDs.length > 0 && viewWidth > 0) {
       // left page
@@ -310,20 +284,20 @@ var ViewPager = React.createClass({
       }
     }
 
-    var sceneContainerStyle = {
+    let sceneContainerStyle = {
       width: viewWidth * pagesNum,
       flex: 1,
       flexDirection: 'row'
     };
 
-    var translateX = this.state.scrollValue.interpolate({
+    let translateX = this.state.scrollValue.interpolate({
       inputRange: [0, 1], outputRange: [0, -viewWidth]
     });
 
     return (
       <View style={{flex: 1}}
         onLayout={(event) => {
-          var viewWidth = event.nativeEvent.layout.width;
+          let viewWidth = event.nativeEvent.layout.width;
           if (!viewWidth || this.state.viewWidth === viewWidth) {
             return;
           }
@@ -340,9 +314,9 @@ var ViewPager = React.createClass({
       </View>
     );
   }
-});
+}
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   indicators: {
     flex: 1,
     alignItems: 'center',
