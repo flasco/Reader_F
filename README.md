@@ -1,6 +1,6 @@
 # Reader_F
 
-> latest consummated prj: [Tassel](https://github.com/flasco/tassel)
+> DEPRECATED, latest consummated prj: [Tassel](https://github.com/flasco/tassel)
 
 This is a novel reader app powered by react-native,but still now ,it's just a Partially Prepared Products.
 
